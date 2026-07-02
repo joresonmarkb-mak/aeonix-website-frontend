@@ -202,13 +202,13 @@ const defaultFilters = {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar cartCount={0} />
+    
 
       {/* Page header */}
       <div className="bg-[#1a1410] pt-28 pb-10 px-[5%]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-2">Our Collection</p>
-          <h1 className="font-serif text-4xl text-[#f0ece4] font-bold">All Watches</h1>
+          <h1 className=" text-4xl text-[#f0ece4] font-bold">All Watches</h1>
         </div>
       </div>
 

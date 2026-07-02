@@ -1,8 +1,8 @@
 const trustItems = [
   { icon: "🛡️", title: "Authenticity Guaranteed", desc: "Every watch verified before listing" },
-  { icon: "🚚", title: "Nationwide Delivery", desc: "Shipping across the Philippines" },
-  { icon: "↩️", title: "7-Day Returns", desc: "Not satisfied? Send it back" },
-  { icon: "📍", title: "Based in Urdaneta", desc: "2291 Bonifacio St, Pangasinan" },
+  { icon: "🚚", title: "Nationwide Delivery", desc: "Luzon : 2-3 days, Visayas/Mindanao: 4 - 7 days " },
+  { icon: "↩️", title: "Secure Payment", desc: "COD, Gcash, Debit/Credit Card, Online Banking" },
+  { icon: "📍", title: "Based in Urdaneta", desc: "Urdaneta City, Pangasinan" },
 ];
 
 

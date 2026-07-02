@@ -52,7 +52,7 @@ function Hero() {
               Shop Now
             </a>
             <a href="#" className="px-9 py-3.5 border border-[#C8A03C]/40 text-[#C8A03C] hover:border-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-colors no-underline">
-              View Catalog
+              View Collection
             </a>
           </div>
         </div>
@@ -175,7 +175,7 @@ function NewArrivals() {
         )}
 
         <div className="text-center mt-12">
-          <a href="/watches" className="inline-block px-10 py-3 border border-[#1a1410] text-[#1a1410] hover:bg-[#1a1410] hover:text-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-all no-underline">
+          <a href="/allwatches" className="inline-block px-10 py-3 border border-[#1a1410] text-[#1a1410] hover:bg-[#1a1410] hover:text-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-all no-underline">
             View All Watches
           </a>
         </div>
