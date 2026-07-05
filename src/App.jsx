@@ -7,6 +7,11 @@ import Contact from "./pages/Contact";
 import ProductDetail from './pages/ProductDetail.jsx';
 import Checkout from './pages/Checkout.jsx';
 import Orders from './pages/Orders.jsx';
+import AdminRoute from './pages/admin/AdminRoute.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import AdminProducts from './pages/admin/AdminProducts.jsx';
+import AdminOrders from './pages/admin/AdminOrders.jsx';
+import AdminUsers from './pages/admin/AdminUsers.jsx';
 
 function App (){
     return (
@@ -19,6 +24,10 @@ function App (){
                 <Route path="/watches/:id" element={<ProductDetail />} />
                 <Route path="/contact" element={<Contact/>} />
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
+                <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
+                <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
             </Routes>
         </BrowserRouter>
         

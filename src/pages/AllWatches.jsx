@@ -119,7 +119,7 @@ function WatchCard({ watch }) {
         )}
         <div className="aspect-square overflow-hidden  ">
           <img
-            src={watch.image?.[0]?.replace(/"/g, '') || "https://placehold.co/400x400?text=No+Image "}
+            src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/400x400?text=No+Image "}
             alt={watch.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

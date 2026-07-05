@@ -80,30 +80,29 @@ function GoogleBtn({ onClick, loading }) {
   const clearError = () => setError("");
 
   // ── Login ───────────────────────────────────────────────
-  const handleLogin = async () => {
-    if (!email || !password) return setError("Please fill in all fields.");
-    setLoading(true); clearError();
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      if (!result.user.emailVerified) {
-        return setError("Please verify your email before logging in.");
-      }
-      const token = await result.user.getIdToken();
-      await API.post("/auth/firebase-login", { token });
-      const user = {
-        name: result.user.displayName || email.split("@")[0],
-        email: result.user.email || email,
-        role: "customer",
-        token,
-      };
-      login({ name: user.name, email: user.email, role: user.role, token: user.token });
-      onClose();
-    } catch (err) {
-      setError(err.code === "auth/invalid-credential" ? "Invalid email or password." : err.message);
-    } finally {
-      setLoading(false);
+const handleLogin = async () => {
+  if (!email || !password) return setError("Please fill in all fields.");
+  setLoading(true); clearError();
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    if (!result.user.emailVerified) {
+      return setError("Please verify your email before logging in.");
     }
-  };
+    const firebaseToken = await result.user.getIdToken();
+    const response = await API.post("/auth/firebase-login", { token: firebaseToken });
+    login({
+      name: response.data.name,
+      email: response.data.email,
+      role: response.data.role,
+      token: response.data.token, // ← JWT from your backend
+    });
+    onClose();
+  } catch (err) {
+    setError(err.code === "auth/invalid-credential" ? "Invalid email or password." : err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ── Register step 1 ─────────────────────────────────────
   const handleRegister = async () => {
@@ -155,67 +154,65 @@ function GoogleBtn({ onClick, loading }) {
   };
 
   // ── Google sign-in ──────────────────────────────────────
-  const handleGoogle = async () => {
-    setLoading(true); clearError();
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const isNew = GoogleAuthProvider.credentialFromResult(result);
-      setFirebaseUser(result.user);
-      setProfile(p => ({ ...p, name: result.user.displayName || "" }));
-      if (isNew) {
-        setTab("profile");
-        setStep(2);
-      } else {
-        const token = await result.user.getIdToken();
-        await API.post("/auth/firebase-login", { token });
-        const user = {
-          name: result.user.displayName || profile.name || "",
-          email: result.user.email || "",
-          role: "customer",
-          token,
-        };
-        login({ name: user.name, email: user.email, role: user.role, token: user.token });
-        onClose();
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+ const handleGoogle = async () => {
+  setLoading(true); clearError();
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const isNew = GoogleAuthProvider.credentialFromResult(result);
+    setFirebaseUser(result.user);
+    setProfile(p => ({ ...p, name: result.user.displayName || "" }));
+    if (isNew) {
+      setTab("profile");
+      setStep(2);
+    } else {
+      const firebaseToken = await result.user.getIdToken();
+      const response = await API.post("/auth/firebase-login", { token: firebaseToken });
+      login({
+        name: response.data.name,
+        email: response.data.email,
+        role: response.data.role,
+        token: response.data.token, // ← JWT from your backend
+      });
+      onClose();
     }
-  };
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ── Save profile ────────────────────────────────────────
-  const handleSaveProfile = async () => {
-    if (!profile.name || !profile.phone) return setError("Name and phone are required.");
-    setLoading(true); clearError();
-    try {
-      const token = await firebaseUser.getIdToken();
-      await API.post("/auth/firebase-register", {
-        token,
-        name: profile.name,
-        phone: profile.phone,
-        shippingAddress: {
-          street: profile.street,
-          city: profile.city,
-          province: profile.province,
-          postalCode: profile.postalCode,
-          country: "Philippines",
-        },
-      });
-      const user = {
-        name: profile.name,
-        email: firebaseUser.email,
-        role: "customer",
-        token,
-      };
-      login({ name: user.name, email: user.email, role: user.role, token: user.token });
-      onClose();
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to save profile.");
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleSaveProfile = async () => {
+  if (!profile.name || !profile.phone) return setError("Name and phone are required.");
+  setLoading(true); clearError();
+  try {
+    const firebaseToken = await firebaseUser.getIdToken();
+    const response = await API.post("/auth/firebase-register", {
+      token: firebaseToken,
+      name: profile.name,
+      phone: profile.phone,
+      shippingAddress: {
+        street: profile.street,
+        city: profile.city,
+        province: profile.province,
+        postalCode: profile.postalCode,
+        country: "Philippines",
+      },
+    });
+    login({
+      name: response.data.name,
+      email: response.data.email,
+      role: response.data.role,
+      token: response.data.token, // ← JWT from your backend
+    });
+    onClose();
+  } catch (err) {
+    setError(err.response?.data?.message || "Failed to save profile.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">

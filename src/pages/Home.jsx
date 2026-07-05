@@ -51,7 +51,7 @@ function Hero() {
             <a href="#" className="px-9 py-3.5 bg-[#C8A03C] hover:bg-[#e0b84a] text-black text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
               Shop Now
             </a>
-            <a href="#" className="px-9 py-3.5 border border-[#C8A03C]/40 text-[#C8A03C] hover:border-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-colors no-underline">
+            <a href="/allwatches" className="px-9 py-3.5 border border-[#C8A03C]/40 text-[#C8A03C] hover:border-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-colors no-underline">
               View Collection
             </a>
           </div>
@@ -142,7 +142,7 @@ function NewArrivals() {
                 <div key={watch._id} className="bg-white group cursor-pointer hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300">
                   <div className="relative overflow-hidden aspect-square">
                     <img
-                      src={watch.image?.[0]?.replace(/"/g, '') || "https://placehold.co/300x300?text=No+Image"}
+                      src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/300x300?text=No+Image"}
                       alt={watch.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

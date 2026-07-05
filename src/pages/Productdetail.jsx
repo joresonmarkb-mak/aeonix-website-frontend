@@ -8,7 +8,7 @@ import { useCart } from "../context/CartContext.jsx";
 // ── Image Gallery ─────────────────────────────────────────
 function ImageGallery({ images }) {
   const [selected, setSelected] = useState(0);
-  const { addToCart } = useCart();
+
 
   if (!images || images.length === 0) {
     return (
@@ -96,7 +96,9 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const { addToCart } = useCart();
 
+ 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -118,7 +120,7 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = () => {
-    // Cart logic will go here
+    addToCart(watch, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
