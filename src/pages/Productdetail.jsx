@@ -4,13 +4,33 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import API from "../services/api.js";
 import { useCart } from "../context/CartContext.jsx";
+import ReviewsSection from "../components/reviewSection.jsx";
 
 // ── Image Gallery ─────────────────────────────────────────
 function ImageGallery({ images }) {
   const [selected, setSelected] = useState(0);
 
+  const normalizeImages = (value) => {
+    if (!value) return [];
+    if (Array.isArray(value)) {
+      return value
+        .map((item) => {
+          if (typeof item === "string") return item.replace(/"/g, "");
+          return item?.url || item?.secure_url || "";
+        })
+        .filter(Boolean);
+    }
+    if (typeof value === "string") return [value.replace(/"/g, "")];
+    return [];
+  };
 
-  if (!images || images.length === 0) {
+  const imageList = normalizeImages(images);
+
+  useEffect(() => {
+    setSelected(0);
+  }, [images]);
+
+  if (imageList.length === 0) {
     return (
       <div className="aspect-square bg-gray-100 flex items-center justify-center">
         <span className="text-gray-400 text-sm">No image</span>
@@ -25,16 +45,16 @@ function ImageGallery({ images }) {
       {/* Main image */}
       <div className="aspect-square bg-gray-50 overflow-hidden">
         <img
-          src={clean(images[selected])}
+          src={clean(imageList[selected])}
           alt="product"
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* Thumbnails */}
-      {images.length > 1 && (
+      {imageList.length > 1 && (
         <div className="flex gap-2">
-          {images.map((img, i) => (
+          {imageList.map((img, i) => (
             <button
               key={i}
               onClick={() => setSelected(i)}
@@ -71,7 +91,7 @@ function RecommendCard({ watch }) {
           </span>
         )}
         <img
-          src={watch.image?.[0]?.replace(/"/g, '') || "https://placehold.co/300x300?text=No+Image"}
+          src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/300x300?text=No+Image"}
           alt={watch.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -173,7 +193,7 @@ export default function ProductDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
 
           {/* Left — Images */}
-          <ImageGallery images={watch.image} />
+          <ImageGallery images={watch.images || watch.image} />
 
           {/* Right — Details */}
           <div className="flex flex-col">
@@ -257,6 +277,7 @@ export default function ProductDetail() {
                 <RecommendCard key={rec._id} watch={rec} />
               ))}
             </div>
+            <ReviewsSection productId={id} productName={watch?.name} />
           </div>
         )}
       </div>

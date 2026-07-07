@@ -61,7 +61,7 @@ export default function CartSidebar({ onLoginRequired }) {
                 {/* Image */}
                 <div className="w-16 h-16 flex-shrink-0 overflow-hidden">
                   <img
-                    src={item.image?.[0]?.replace(/"/g, '') || "https://placehold.co/64x64?text=?"}
+                    src={item.images?.[0]?.replace(/"/g, '') || "https://placehold.co/64x64?text=?"}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />

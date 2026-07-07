@@ -122,6 +122,18 @@ export default function AdminOrders() {
                   {selected.shippingAddress.street}, {selected.shippingAddress.city}, {selected.shippingAddress.province} {selected.shippingAddress.postalCode}
                 </p>
               </div>
+              <div className="border-t border-gray-100 pt-3 flex flex-col gap-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Payment</span>
+                  <span className="font-semibold text-[#1a1410]">{selected.paymentMethod || (selected.paid ? "Credit/Debit Card" : "Cash on Delivery")}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Paid</span>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${selected.paid ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                    {selected.isPaid ? "Yes" : "No"}
+                  </span>
+                </div>
+              </div>
               <div className="border-t border-gray-100 pt-3">
                 <p className="text-[10px] text-gray-400 uppercase tracking-[1px] mb-2">Update Status</p>
                 <select

@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import API from "../services/api.js";
+import ReviewModal from "../components/ReviewModal.jsx";
 
 const statusColors = {
   Pending: "bg-yellow-100 text-yellow-700",
@@ -18,7 +19,9 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
+  const [reviewData, setReviewData] = useState(null);
   const success = searchParams.get("success");
+  const [reviewedItems, setReviewedItems] = useState({});
 
   useEffect(() => {
     if (!user) return;
@@ -29,6 +32,27 @@ export default function Orders() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [user]);
+  useEffect(() => {
+  if (!user || orders.length === 0) return;
+  const deliveredItems = orders
+    .filter(o => o.status === "Delivered")
+    .flatMap(o => o.items.map(i => ({
+      productId: i.product?._id || i.product,
+      orderId: o._id
+    })));
+
+  deliveredItems.forEach(async ({ productId, orderId }) => {
+    try {
+      const res = await API.get(`/reviews/can-review/${productId}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setReviewedItems(prev => ({
+        ...prev,
+        [`${orderId}_${productId}`]: !res.data.canReview && res.data.reason === "Already reviewed",
+      }));
+    } catch { }
+  });
+}, [orders, user]);
 
   return (
     <div className="min-h-screen bg-[#f7f4ef]">
@@ -38,7 +62,6 @@ export default function Orders() {
         <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-2">My Account</p>
         <h1 className="font-serif text-3xl font-bold text-[#1a1410] mb-10">My Orders</h1>
 
-        {/* Success banner */}
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-700 text-sm px-5 py-4 mb-8 flex items-center gap-3">
             <span>✅</span>
@@ -60,10 +83,7 @@ export default function Orders() {
             <p className="text-4xl mb-4">📦</p>
             <p className="font-serif text-xl text-[#1a1410] mb-2">No orders yet</p>
             <p className="text-gray-400 text-sm mb-6">Start shopping to see your orders here.</p>
-            <Link
-              to="/allwatches"
-              className="inline-block px-8 py-3 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[2px] uppercase no-underline hover:bg-[#2a2018] transition-colors"
-            >
+            <Link to="/allwatches" className="inline-block px-8 py-3 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[2px] uppercase no-underline hover:bg-[#2a2018] transition-colors">
               Browse Watches
             </Link>
           </div>
@@ -71,6 +91,7 @@ export default function Orders() {
           <div className="flex flex-col gap-4">
             {orders.map(order => (
               <div key={order._id} className="bg-white p-5">
+
                 {/* Order header */}
                 <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                   <div>
@@ -105,16 +126,48 @@ export default function Orders() {
                         <p className="text-sm font-semibold text-[#1a1410]">{item.name}</p>
                         <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                       </div>
-                      <p className="text-sm font-bold text-[#C8A03C]">₱{item.price.toLocaleString()}</p>
+                      <div className="flex flex-col items-end gap-1">
+                        <p className="text-sm font-bold text-[#C8A03C]">₱{item.price.toLocaleString()}</p>
+                        {/* Review button — only on Delivered orders */}
+                        {order.status === "Delivered" && (
+  <>
+    {reviewedItems[`${order._id}_${item.product?._id || item.product}`] ? (
+      // Already reviewed — show View Review
+      <button
+        onClick={() => window.location.href = `/watches/${item.product?._id || item.product}`}
+        className="text-[10px] text-gray-400 hover:underline bg-transparent border-none cursor-pointer tracking-[1px] uppercase font-bold"
+      >
+        👁 View Review
+      </button>
+    ) : (
+      // Not yet reviewed — show Write Review
+      <button
+        onClick={() => setReviewData({
+          productId: item.product?._id || item.product,
+          productName: item.name,
+          orderId: order._id,
+        })}
+        className="text-[10px] text-[#C8A03C] hover:underline bg-transparent border-none cursor-pointer tracking-[1px] uppercase font-bold"
+      >
+        ★ Write Review
+      </button>
+    )}
+  </>
+)}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Shipping address */}
-                <div className="border-t border-gray-100 pt-3 mt-3">
+                {/* Shipping + payment */}
+                <div className="border-t border-gray-100 pt-3 mt-3 flex flex-col gap-1">
                   <p className="text-[10px] text-gray-400 tracking-[1px] uppercase mb-1">Ship to</p>
                   <p className="text-xs text-gray-500">
                     {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.province} {order.shippingAddress.postalCode}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Payment: <span className="font-semibold text-[#1a1410]">{order.paymentMethod}</span>
+                    {order.isPaid && <span className="ml-2 text-green-600 text-[10px] font-bold">✓ Paid</span>}
                   </p>
                 </div>
               </div>
@@ -122,6 +175,17 @@ export default function Orders() {
           </div>
         )}
       </div>
+
+      {/* Review Modal */}
+      {reviewData && (
+        <ReviewModal
+          productId={reviewData.productId}
+          productName={reviewData.productName}
+          orderId={reviewData.orderId}
+          onClose={() => setReviewData(null)}
+          onSuccess={() => setReviewData(null)}
+        />
+      )}
 
       <Footer />
     </div>
