@@ -81,15 +81,6 @@ function Navbar({ cartCount }) {
 
                 {/* Dropdown */}
                 <div className="absolute right-0 top-8 w-44 bg-white shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <Link to="/profile" className="flex items-center gap-2 px-4 py-3 text-xs text-gray-600 hover:bg-gray-50 hover:text-[#1a1410] no-underline transition-colors">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    My Profile
-                  </Link>
-                  <Link to="/orders" className="flex items-center gap-2 px-4 py-3 text-xs text-gray-600 hover:bg-gray-50 hover:text-[#1a1410] no-underline transition-colors">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                    My Orders
-                  </Link>
-
                   {/* Admin only */}
                   {user.role === "admin" && (
                     <>
@@ -101,6 +92,17 @@ function Navbar({ cartCount }) {
                       
                     </>
                   )}
+                  <Link to="/profile" className="flex items-center gap-2 px-4 py-3 text-xs text-gray-600 hover:bg-gray-50 hover:text-[#1a1410] no-underline transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    My Profile
+                  </Link>
+                  
+                  <Link to="/orders" className="flex items-center gap-2 px-4 py-3 text-xs text-gray-600 hover:bg-gray-50 hover:text-[#1a1410] no-underline transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    My Orders
+                  </Link>
+
+                 
 
                   <div className="border-t border-gray-100" />
                   <button onClick={logout} className="flex items-center gap-2 px-4 py-3 text-xs text-red-400 hover:bg-red-50 hover:text-red-600 w-full bg-transparent border-none cursor-pointer transition-colors">

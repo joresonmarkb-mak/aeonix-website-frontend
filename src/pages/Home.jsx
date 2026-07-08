@@ -3,6 +3,7 @@ import {getNewArrivals} from "../services/Api.js";
 import Footer from "../components/footer.jsx";
 import Navbar from "../components/navbar.jsx";
 import TrustBar from "../components/trustBar.jsx";
+import AuthModal from "./Authmodal.jsx";
 // ── Mock Data ──────────────────────────────────────────────
 
 
@@ -20,7 +21,7 @@ const collections = [
 
 
 // ── Hero ──────────────────────────────────────────────────
-function Hero() {
+function Hero({ onShopNow }) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
      <div
@@ -48,9 +49,13 @@ function Hero() {
             Discover the world of Timeless Elegance, where every timepiece tells a story of craftsmanship, heritage, and sophistication.
           </p>
           <div className="flex gap-4 flex-wrap">
-            <a href="#" className="px-9 py-3.5 bg-[#C8A03C] hover:bg-[#e0b84a] text-black text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
+            <button
+              type="button"
+              onClick={onShopNow}
+              className="px-9 py-3.5 bg-[#C8A03C] hover:bg-[#e0b84a] text-black text-xs font-bold tracking-[2px] uppercase transition-colors border-none cursor-pointer"
+            >
               Shop Now
-            </a>
+            </button>
             <a href="/allwatches" className="px-9 py-3.5 border border-[#C8A03C]/40 text-[#C8A03C] hover:border-[#C8A03C] text-xs font-semibold tracking-[2px] uppercase transition-colors no-underline">
               View Collection
             </a>
@@ -206,7 +211,7 @@ function StyleBudgetBanner() {
             </div>
             <span className="text-white text-sm ml-2">4.9 · 120+ reviews</span>
           </div>
-          <a href="#" className=" inline-block px-10 py-3.5 bg-black hover:bg-[#e0b84a] text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
+          <a href="/allwatches" className=" inline-block px-10 py-3.5 bg-black hover:bg-[#e0b84a] text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
             Explore Our Collection
           </a>
         </div>
@@ -252,7 +257,7 @@ function FindYourWatch() {
         </div>
 
         <div className="text-center mt-12">
-          <a href="#" className="inline-block px-11 py-3.5 bg-[#1a1410] hover:bg-yellow-400 text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
+          <a href="/allwatches" className="inline-block px-11 py-3.5 bg-[#1a1410] hover:bg-yellow-400 text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
             Explore All Collections
           </a>
         </div>
@@ -270,16 +275,19 @@ function FindYourWatch() {
 
 // ── Page ──────────────────────────────────────────────────
 export default function Home() {
+  const [showAuth, setShowAuth] = useState(false);
+
   return (
     <div className="font-sans">
       <Navbar cartCount={2} />
-      <Hero />
+      <Hero onShopNow={() => setShowAuth(true)} />
       <NewArrivals />
       <StyleBudgetBanner />
       <FindYourWatch />
-     
+      
       <TrustBar />
       <Footer />
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
     </div>
   );
 }

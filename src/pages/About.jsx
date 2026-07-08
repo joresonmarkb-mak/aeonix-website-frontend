@@ -91,7 +91,7 @@ export default function About() {
               {brand.description}
             </p>
             <a
-              href="#"
+              href="/allwatches"
               className="mt-6 inline-block px-8 py-2.5 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[2px] uppercase hover:bg-[#2a2018] transition-colors no-underline"
             >
               Discover

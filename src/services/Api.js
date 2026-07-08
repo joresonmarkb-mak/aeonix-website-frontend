@@ -10,4 +10,7 @@ export const getNewArrivals = () =>
 export const getProducts = (params) =>
   API.get(`/products?${params}`);
 
+export const sendContactMessage = (data) =>
+  API.post('/messages/createMessage', data);
+
 export default API;
