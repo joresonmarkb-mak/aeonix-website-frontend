@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import AdminLayout from './AdminLayout.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import API from '../../services/api.js';
+import API from '../../services/Api.js';
 
 const statusColorsIsRead = {
   Read: "bg-green-100 text-black-700",
