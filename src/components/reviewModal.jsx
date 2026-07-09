@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../services/api.js";
+import API from "../services/Api.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 function StarRating({ rating, setRating }) {

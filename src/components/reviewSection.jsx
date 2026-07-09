@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import API from "../services/api.js";
+import API from "../services/Api.js";
 import { useAuth } from "../context/AuthContext.jsx";
-import ReviewModal from "./ReviewModal.jsx";
+import ReviewModal from "./reviewModal.jsx";
 
 function Stars({ rating, size = "text-base" }) {
   return (
