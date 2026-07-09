@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { auth, googleProvider } from "../services/firebase.js";
-import API from "../services/api.js";
+import API from "../services/Api.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // ── Step indicators ───────────────────────────────────────

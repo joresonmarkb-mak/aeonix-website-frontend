@@ -12,7 +12,7 @@ import Footer from "../components/footer.jsx";
 import TrustBar from "../components/trustBar.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-import API from "../services/api.js";
+import API from "../services/Api.js";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 

@@ -4,8 +4,8 @@ import Navbar from "../components/navbar.jsx";
 import Footer from "../components/footer.jsx";
 import TrustBar from "../components/trustBar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-import API from "../services/api.js";
-import ReviewModal from "../components/ReviewModal.jsx";
+import API from "../services/Api.js";
+import ReviewModal from "../components/reviewModal.jsx";
 
 const statusColors = {
   Pending: "bg-yellow-100 text-yellow-700",
