@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import AllWatches from "./pages/AllWatches";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import ProductDetail from './pages/ProductDetail.jsx';
+import ProductDetail from './pages/Productdetail.jsx';
 import Checkout from './pages/Checkout.jsx';
 import Orders from './pages/Orders.jsx';
 import AdminRoute from './pages/admin/AdminRoute.jsx';
