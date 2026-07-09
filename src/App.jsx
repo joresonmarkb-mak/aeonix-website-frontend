@@ -12,7 +12,7 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import AdminProducts from './pages/admin/AdminProducts.jsx';
 import AdminOrders from './pages/admin/AdminOrders.jsx';
 import AdminUsers from './pages/admin/AdminUsers.jsx';
-import AdminReviews from './pages/admin/AdminReviews.jsx';
+import AdminReviews from './pages/admin/Adminreviews.jsx';
 import Profile from './pages/Profile.jsx';
 import AdminMessages from './pages/admin/AdminMessage.jsx';
 
