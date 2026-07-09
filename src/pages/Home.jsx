@@ -8,10 +8,10 @@ import AuthModal from "./Authmodal.jsx";
 
 
 const collections = [
-  { id: 1, name: "Men's Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782275334/c46b6ab7-4a2a-4ec6-a882-c2bcda2ab99a_rbpoax.jpg" },
-  { id: 2, name: "Dive Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782275334/3fa0ed44-17a4-456d-92d5-a45c4ec6b0de_ncsjkr.jpg" },
-  { id: 3, name: "Women's Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782275334/e98c93fe-aad8-4a88-b6ac-e041248b0052_v504ye.jpg" },
-  { id: 4, name: "Unisex Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782275334/ee6b8355-d71f-4570-89e8-c6c275eb83e3_hd7bdf.jpg" },
+  { id: 1, name: "Men's Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782254292/png_mens_foxkua.png" },
+  { id: 2, name: "Dive Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782254291/png_divers_aawqqw.png" },
+  { id: 3, name: "Women's Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782254291/Untitled-2_urd5tj.png" },
+  { id: 4, name: "Unisex Watches", image: "https://res.cloudinary.com/dp3iviwzj/image/upload/v1782254296/Untitled-2_unisex_k9jae6.png" },
 ];
 
 
@@ -96,7 +96,7 @@ function NewArrivals() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header + arrows */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center  justify-between mb-12">
           <div>
             <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-3">Just Landed</p>
             <h2 className="font-serif text-4xl text-[#1a1410] font-bold">New Arrivals</h2>
