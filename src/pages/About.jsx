@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import TrustBar from "../components/trustBar";
+import Navbar from "../components/navbar.jsx";
+import Footer from "../components/footer.jsx";
+import TrustBar from "../components/trustBar.jsx";
 
 
 

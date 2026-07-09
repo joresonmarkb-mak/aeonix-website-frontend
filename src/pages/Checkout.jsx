@@ -7,8 +7,9 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
+import Navbar from "../components/navbar.jsx";
+import Footer from "../components/footer.jsx";
+import TrustBar from "../components/trustBar.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import API from "../services/api.js";

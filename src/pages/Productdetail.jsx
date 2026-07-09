@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
+import Navbar from "../components/navbar.jsx";
+import Footer from "../components/footer.jsx";
+import TrustBar from "../components/trustBar.jsx";
 import API from "../services/api.js";
 import { useCart } from "../context/CartContext.jsx";
 import ReviewsSection from "../components/reviewSection.jsx";

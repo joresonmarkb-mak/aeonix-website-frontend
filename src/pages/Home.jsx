@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {getNewArrivals} from "../services/Api.js";
-import Footer from "../components/footer.jsx";
 import Navbar from "../components/navbar.jsx";
+import Footer from "../components/footer.jsx";
 import TrustBar from "../components/trustBar.jsx";
 import AuthModal from "./Authmodal.jsx";
 // ── Mock Data ──────────────────────────────────────────────

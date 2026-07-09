@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar.jsx";
-import Footer from "../components/Footer.jsx";
-import API from "../services/api.js";
+import Navbar from "../components/navbar.jsx";
+import Footer from "../components/footer.jsx";
 import TrustBar from "../components/trustBar.jsx";
+import API from "../services/api.js";
+
 
 // ── Filter Sidebar ────────────────────────────────────────
 function FilterSection({ title, children, defaultOpen = false }) {
