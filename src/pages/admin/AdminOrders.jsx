@@ -148,6 +148,7 @@ export default function AdminOrders() {
               <div className="flex justify-between text-sm font-bold border-t border-gray-100 pt-3">
                 <span>Total</span>
                 <span>₱{selected.totalAmount.toLocaleString()}</span>
+                
               </div>
             </div>
           </div>

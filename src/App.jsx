@@ -14,6 +14,7 @@ import AdminOrders from './pages/admin/AdminOrders.jsx';
 import AdminUsers from './pages/admin/AdminUsers.jsx';
 import AdminReviews from './pages/admin/AdminReviews.jsx';
 import Profile from './pages/Profile.jsx';
+import AdminMessages from './pages/admin/AdminMessage.jsx';
 
 
 
@@ -33,6 +34,7 @@ function App (){
                 <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
                 <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
                 <Route path="/admin/reviews" element={<AdminRoute><AdminReviews /></AdminRoute>} />
+                <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
                 <Route path="/profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
