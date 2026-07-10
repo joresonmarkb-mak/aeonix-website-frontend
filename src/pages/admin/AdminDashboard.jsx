@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "./AdminLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import API from "../../services/Api.js";
+import API from "../../services/api.js";
 
 function StatCard({ title, value, icon, color, link }) {
   return (
@@ -58,7 +58,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col gap-6">
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <StatCard
             title="Total Products"
             value={loading ? "..." : stats.products}

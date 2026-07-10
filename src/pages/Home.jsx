@@ -242,7 +242,7 @@ function FindYourWatch() {
           <h2 className="font-serif text-4xl text-[#1a1410] font-bold">Find Your Perfect Watch</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 ">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 ">
           {collections.map(col => (
             <a key={col.id} href="#" className="relative overflow-hidden aspect-[4/3] block group no-underline">
               <img

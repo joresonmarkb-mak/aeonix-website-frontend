@@ -5,16 +5,13 @@ import Footer from "../components/footer.jsx";
 import TrustBar from "../components/trustBar.jsx";
 import API from "../services/Api.js";
 
-
-// ── Filter Sidebar ────────────────────────────────────────
+// ── Filter Section ────────────────────────────────────────
 function FilterSection({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-gray-200 py-4">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between text-left bg-transparent border-none cursor-pointer"
-      >
+      <button onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between text-left bg-transparent border-none cursor-pointer">
         <span className="text-xs font-bold tracking-[2px] uppercase text-[#1a1410]">{title}</span>
         <span className={`text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
@@ -39,10 +36,8 @@ function Sidebar({ filters, setFilters, onReset }) {
 
   const CheckItem = ({ label, filterKey, value }) => (
     <label className="flex items-center gap-2.5 cursor-pointer mb-2 group">
-      <div
-        onClick={() => toggle(filterKey, value)}
-        className={`w-4 h-4 border flex items-center justify-center cursor-pointer transition-colors ${filters[filterKey] === value ? "bg-[#1a1410] border-[#1a1410]" : "border-gray-300 group-hover:border-[#1a1410]"}`}
-      >
+      <div onClick={() => toggle(filterKey, value)}
+        className={`w-4 h-4 border flex items-center justify-center cursor-pointer transition-colors ${filters[filterKey] === value ? "bg-[#1a1410] border-[#1a1410]" : "border-gray-300 group-hover:border-[#1a1410]"}`}>
         {filters[filterKey] === value && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M20 6L9 17l-5-5"/></svg>}
       </div>
       <span className="text-sm text-gray-600">{label}</span>
@@ -50,77 +45,57 @@ function Sidebar({ filters, setFilters, onReset }) {
   );
 
   return (
-    <aside className="w-64 flex-shrink-0">
-      <div className="bg-white p-5 sticky top-24">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold tracking-[2px] uppercase text-[#1a1410]">Filters</h3>
-          <button onClick={onReset} className="text-xs text-[#C8A03C] hover:underline bg-transparent border-none cursor-pointer">Reset all</button>
-        </div>
-
-        <FilterSection title="Condition" defaultOpen={true}>
-          <CheckItem label="Brand New" filterKey="condition" value="Brand New" />
-          <CheckItem label="Pre-owned" filterKey="condition" value="Pre-owned" />
-        </FilterSection>
-
-        <FilterSection title="Availability" defaultOpen={true}>
-          <CheckItem label="In Stock" filterKey="availability" value="instock" />
-          <CheckItem label="Out of Stock" filterKey="availability" value="outofstock" />
-        </FilterSection>
-
-        <FilterSection title="Price Range">
-          <div className="flex gap-2 mb-2">
-            <input
-              type="number"
-              placeholder="Min"
-              value={minInput}
-              onChange={e => setMinInput(e.target.value)}
-              className="w-full border border-gray-200 px-2 py-1.5 text-sm focus:outline-none focus:border-[#C8A03C]"
-            />
-            <input
-              type="number"
-              placeholder="Max"
-              value={maxInput}
-              onChange={e => setMaxInput(e.target.value)}
-              className="w-full border border-gray-200 px-2 py-1.5 text-sm focus:outline-none focus:border-[#C8A03C]"
-            />
-          </div>
-          <button
-            onClick={handlePriceApply}
-            className="w-full py-1.5 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[1px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer"
-          >
-            Apply
-          </button>
-        </FilterSection>
-
-        <FilterSection title="Function">
-          <CheckItem label="Automatic" filterKey="function" value="Automatic" />
-          <CheckItem label="Quartz" filterKey="function" value="Quartz" />
-        </FilterSection>
-
-        <FilterSection title="Category">
-          {["Classic", "Divers", "Men's", "Women's", "Unisex"].map(cat => (
-            <CheckItem key={cat} label={cat} filterKey="category" value={cat} />
-          ))}
-        </FilterSection>
+    <div className="bg-white p-5">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-bold tracking-[2px] uppercase text-[#1a1410]">Filters</h3>
+        <button onClick={onReset} className="text-xs text-[#C8A03C] hover:underline bg-transparent border-none cursor-pointer">Reset all</button>
       </div>
-    </aside>
+      <FilterSection title="Condition" defaultOpen={true}>
+        <CheckItem label="Brand New" filterKey="condition" value="Brand New" />
+        <CheckItem label="Pre-owned" filterKey="condition" value="Pre-owned" />
+      </FilterSection>
+      <FilterSection title="Availability" defaultOpen={true}>
+        <CheckItem label="In Stock" filterKey="availability" value="instock" />
+        <CheckItem label="Out of Stock" filterKey="availability" value="outofstock" />
+      </FilterSection>
+      <FilterSection title="Price Range">
+        <div className="flex gap-2 mb-2">
+          <input type="number" placeholder="Min" value={minInput} onChange={e => setMinInput(e.target.value)}
+            className="w-full border border-gray-200 px-2 py-1.5 text-sm focus:outline-none focus:border-[#C8A03C]" />
+          <input type="number" placeholder="Max" value={maxInput} onChange={e => setMaxInput(e.target.value)}
+            className="w-full border border-gray-200 px-2 py-1.5 text-sm focus:outline-none focus:border-[#C8A03C]" />
+        </div>
+        <button onClick={handlePriceApply}
+          className="w-full py-1.5 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[1px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer">
+          Apply
+        </button>
+      </FilterSection>
+      <FilterSection title="Function">
+        <CheckItem label="Automatic" filterKey="function" value="Automatic" />
+        <CheckItem label="Quartz" filterKey="function" value="Quartz" />
+      </FilterSection>
+      <FilterSection title="Category">
+        {["Classic", "Divers", "Men's", "Women's", "Unisex"].map(cat => (
+          <CheckItem key={cat} label={cat} filterKey="category" value={cat} />
+        ))}
+      </FilterSection>
+    </div>
   );
 }
 
 // ── Product Card ──────────────────────────────────────────
 function WatchCard({ watch }) {
-         
   return (
     <Link to={`/watches/${watch._id}`} className="no-underline group">
       <div className="bg-[#f5f5f5] relative overflow-hidden">
-        {watch.discount && (
+        {watch.discount > 0 && (
           <span className="absolute top-3 right-3 z-10 bg-[#C8A03C] text-black text-[10px] font-bold px-2 py-1">
             {watch.discount}% off
           </span>
         )}
-        <div className="aspect-square overflow-hidden  ">
+        <div className="aspect-square overflow-hidden">
           <img
-            src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/400x400?text=No+Image "}
+            src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/400x400?text=No+Image"}
             alt={watch.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -136,7 +111,6 @@ function WatchCard({ watch }) {
   );
 }
 
-// ── Skeleton ──────────────────────────────────────────────
 function WatchSkeleton() {
   return (
     <div className="animate-pulse">
@@ -150,25 +124,18 @@ function WatchSkeleton() {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────
 const defaultFilters = {
-  search: "",
-  condition: "",
-  availability: "",
-  minPrice: "",
-  maxPrice: "",
-  function: "",
-  category: "",
-  sort: "newest",
-  page: 1,
+  search: "", condition: "", availability: "", minPrice: "", maxPrice: "",
+  function: "", category: "", sort: "newest", page: 1,
 };
 
- function Watches() {
+function Watches() {
   const [filters, setFilters] = useState(defaultFilters);
   const [watches, setWatches] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const fetchWatches = useCallback(async () => {
     setLoading(true);
@@ -203,49 +170,54 @@ const defaultFilters = {
 
   return (
     <div className="min-h-screen bg-white">
-    
-
       {/* Page header */}
       <div className="bg-[#1a1410] pt-28 pb-10 px-[5%]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-2">Our Collection</p>
-          <h1 className=" text-4xl text-[#f0ece4] font-bold">All Watches</h1>
+          <h1 className="text-4xl text-[#f0ece4] font-bold">All Watches</h1>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-[5%] py-10">
-        {/* Search + Sort bar */}
+
+        {/* Search + Sort + Mobile Filter Toggle */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Search */}
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input
-              type="text"
-              placeholder="Search watches..."
-              value={filters.search}
+            <input type="text" placeholder="Search watches..." value={filters.search}
               onChange={e => setFilters(f => ({ ...f, search: e.target.value, page: 1 }))}
-              className="w-full pl-9 pr-4 py-2.5 border border-gray-200 text-sm focus:outline-none focus:border-[#C8A03C]"
-            />
+              className="w-full pl-9 pr-4 py-2.5 border border-gray-200 text-sm focus:outline-none focus:border-[#C8A03C]" />
           </div>
-
-          {/* Sort */}
-          <select
-            value={filters.sort}
-            onChange={e => setFilters(f => ({ ...f, sort: e.target.value, page: 1 }))}
-            className="border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#C8A03C] bg-white cursor-pointer"
-          >
+          <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value, page: 1 }))}
+            className="border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#C8A03C] bg-white cursor-pointer">
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
           </select>
 
+          {/* Mobile filter toggle */}
+          <button onClick={() => setShowMobileFilter(!showMobileFilter)}
+            className="lg:hidden flex items-center gap-2 border border-gray-200 px-4 py-2.5 text-sm bg-white cursor-pointer hover:border-[#1a1410] transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filters
+          </button>
+
           <p className="text-sm text-gray-400 self-center whitespace-nowrap">{total} watches</p>
         </div>
 
+        {/* Mobile Filter Panel */}
+        {showMobileFilter && (
+          <div className="lg:hidden mb-6 border border-gray-200">
+            <Sidebar filters={filters} setFilters={f => { setFilters(f); setShowMobileFilter(false); }} onReset={() => { handleReset(); setShowMobileFilter(false); }} />
+          </div>
+        )}
+
         <div className="flex gap-8">
-          {/* Sidebar */}
-          <Sidebar filters={filters} setFilters={setFilters} onReset={handleReset} />
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 self-start">
+            <Sidebar filters={filters} setFilters={setFilters} onReset={handleReset} />
+          </aside>
 
           {/* Grid */}
           <div className="flex-1">
@@ -270,50 +242,33 @@ const defaultFilters = {
 
             {/* Pagination */}
             {totalPages > 1 && !loading && (
-              <div className="flex justify-center gap-2 mt-12">
-                <button
-                  onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}
-                  disabled={filters.page === 1}
-                  className="w-9 h-9 border border-gray-200 flex items-center justify-center disabled:opacity-30 hover:border-[#1a1410] transition-colors bg-transparent cursor-pointer"
-                >
-                  ‹
-                </button>
+              <div className="flex justify-center gap-2 mt-12 flex-wrap">
+                <button onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))} disabled={filters.page === 1}
+                  className="w-9 h-9 border border-gray-200 flex items-center justify-center disabled:opacity-30 hover:border-[#1a1410] transition-colors bg-transparent cursor-pointer">‹</button>
                 {[...Array(totalPages)].map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setFilters(f => ({ ...f, page: i + 1 }))}
-                    className={`w-9 h-9 border text-sm transition-colors cursor-pointer ${filters.page === i + 1 ? "bg-[#1a1410] text-[#C8A03C] border-[#1a1410]" : "border-gray-200 hover:border-[#1a1410] bg-transparent"}`}
-                  >
+                  <button key={i} onClick={() => setFilters(f => ({ ...f, page: i + 1 }))}
+                    className={`w-9 h-9 border text-sm transition-colors cursor-pointer ${filters.page === i + 1 ? "bg-[#1a1410] text-[#C8A03C] border-[#1a1410]" : "border-gray-200 hover:border-[#1a1410] bg-transparent"}`}>
                     {i + 1}
                   </button>
                 ))}
-                <button
-                  onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
-                  disabled={filters.page === totalPages}
-                  className="w-9 h-9 border border-gray-200 flex items-center justify-center disabled:opacity-30 hover:border-[#1a1410] transition-colors bg-transparent cursor-pointer"
-                >
-                  ›
-                </button>
+                <button onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))} disabled={filters.page === totalPages}
+                  className="w-9 h-9 border border-gray-200 flex items-center justify-center disabled:opacity-30 hover:border-[#1a1410] transition-colors bg-transparent cursor-pointer">›</button>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      
     </div>
   );
 }
 
-
 export default function AllWatches() {
-  return(
-  <div className="font-sans">
-      <Navbar cartCount={2} />
+  return (
+    <div className="font-sans">
+      <Navbar />
       <Watches />
       <TrustBar />
       <Footer />
-  </div>);
-    
-  }
-  
+    </div>
+  );
+}
