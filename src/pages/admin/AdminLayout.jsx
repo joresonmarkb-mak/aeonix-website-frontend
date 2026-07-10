@@ -106,7 +106,7 @@ export default function AdminLayout({ children }) {
         {/* Logo + toggle */}
         <div className="flex items-center justify-between px-4 py-5 border-b border-white/10">
           <span className="font-serif text-lg font-bold text-[#C8A03C] tracking-[2px] lg:hidden xl:block">
-            {(!sidebarOpen && window.innerWidth >= 1024) ? "" : <img src="https://res.cloudinary.com/dp3iviwzj/image/upload/v1783642916/png_lojf00.png" alt="AEONIX" className="h-8 w-20" />}
+            {(!sidebarOpen && window.innerWidth >= 1024) ? "" : null}
           </span>
           <span className={`font-serif text-lg font-bold text-[#C8A03C] tracking-[2px] hidden lg:block ${sidebarOpen ? "" : "lg:hidden"}`}>
             <img src="https://res.cloudinary.com/dp3iviwzj/image/upload/v1783642916/png_lojf00.png" alt="AEONIX" className="h-8 w-20" />
