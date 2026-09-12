@@ -54,10 +54,10 @@ function Sidebar({ filters, setFilters, onReset }) {
         <CheckItem label="Brand New" filterKey="condition" value="Brand New" />
         <CheckItem label="Pre-owned" filterKey="condition" value="Pre-owned" />
       </FilterSection>
-      <FilterSection title="Availability" defaultOpen={true}>
+      {/* <FilterSection title="Availability" defaultOpen="instock">
         <CheckItem label="In Stock" filterKey="availability" value="instock" />
         <CheckItem label="Out of Stock" filterKey="availability" value="outofstock" />
-      </FilterSection>
+      </FilterSection> */}
       <FilterSection title="Price Range">
         <div className="flex gap-2 mb-2">
           <input type="number" placeholder="Min" value={minInput} onChange={e => setMinInput(e.target.value)}

@@ -4,71 +4,65 @@ import AdminLayout from "./AdminLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import API from "../../services/Api.js";
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
 const statusColors = {
-  Pending: "bg-yellow-100 text-yellow-700",
-  Processing: "bg-blue-100 text-blue-700",
-  Shipped: "bg-purple-100 text-purple-700",
-  Delivered: "bg-green-100 text-green-700",
-  Cancelled: "bg-red-100 text-red-700",
+  Pending: "bg-blue-500",
+  Processing: "bg-teal-500",
+  Shipped: "bg-purple-500",
+  Delivered: "bg-green-500",
+  Cancelled: "bg-red-500",
 };
 
-// ── Simple bar chart ───────────────────────────────────────
-function BarChart({ data, valueKey, color, label }) {
-  const max = Math.max(...data.map(d => d[valueKey]), 1);
+const statusText = {
+  Pending: "text-blue-400",
+  Processing: "text-teal-400",
+  Shipped: "text-purple-400",
+  Delivered: "text-green-400",
+  Cancelled: "text-red-400",
+};
+
+// ── Bar Chart ─────────────────────────────────────────────
+function BarChart({ data }) {
+  const max = Math.max(...data.map(d => d.revenue), 1);
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-[10px] text-gray-400 uppercase tracking-[1.5px] mb-2">{label}</p>
-      <div className="flex items-end gap-1 h-24">
+    <div className="flex flex-col gap-2 h-full">
+      <div className="flex items-end gap-1 flex-1 min-h-0">
         {data.map((d, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
             <div
-              className={`w-full rounded-sm transition-all ${color}`}
-              style={{ height: `${Math.max((d[valueKey] / max) * 96, 2)}px` }}
+              className="w-full bg-gray-600 hover:bg-[#C8A03C] rounded-sm transition-colors cursor-pointer"
+              style={{ height: `${Math.max((d.revenue / max) * 100, 2)}%` }}
             />
-            {/* Tooltip */}
-            <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-[#1a1410] text-white text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
-              ₱{d[valueKey].toLocaleString()}
+            <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white text-black text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+              ₱{d.revenue.toLocaleString()}
             </div>
           </div>
         ))}
       </div>
       <div className="flex gap-1">
-        {data.map((d, i) => (
-          <div key={i} className="flex-1 text-center text-[8px] text-gray-400">{d.monthName}</div>
+        {data.filter((_, i) => i % 2 === 0).map((d, i) => (
+          <div key={i} className="flex-1 text-center" style={{ flex: 2 }}>
+            <span className="text-[9px] text-gray-500">{d.monthName}</span>
+          </div>
         ))}
       </div>
     </div>
   );
 }
 
-function StatCard({ title, value, icon, color, link, sub }) {
-  const content = (
-    <div className="bg-white/15 p-4 flex items-center gap-3 hover:shadow-md transition-shadow h-full rounded-2xl border-white/20 border-[0.1px]">
-      {/* <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${color}`}>
-        {icon}
-      </div> */}
-      <div className="min-w-0">
-        <p className="text-[10px] text-white tracking-[1px] uppercase mb-0.5 truncate">{title}</p>
-        <p className="text-xl font-bold text-white truncate">{value}</p>
-        {sub && <p className="text-[10px] text-white truncate">{sub}</p>}
-      </div>
-    </div>
-  );
-  return link ? <Link to={link} className="no-underline">{content}</Link> : <div>{content}</div>;
-}
-
 export default function AdminDashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState({ products: 0, orders: 0, users: 0, revenue: 0 });
+  const [invSummary, setInvSummary] = useState({ totalInventoryValue: 0, totalCostValue: 0, totalPotentialProfit: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
   const [monthly, setMonthly] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(null);
+  const [orderStats, setOrderStats] = useState({ pending: 0, processing: 0, delivered: 0, cancelled: 0 });
   const [loading, setLoading] = useState(true);
-  const [invSummary, setInvSummary] = useState({ totalInventoryValue: 0, totalCostValue: 0, totalPotentialProfit: 0 });
-  const [chartLoading, setChartLoading] = useState(true);
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [bestByCategory, setBestByCategory] = useState([]);
+  const [channels, setChannels] = useState([]);
+  const [year] = useState(new Date().getFullYear());
+  const [orderFilter, setOrderFilter] = useState("");
 
   const headers = { Authorization: `Bearer ${user?.token}` };
 
@@ -78,12 +72,12 @@ export default function AdminDashboard() {
       API.get("/orders", { headers }),
       API.get("/users", { headers }),
       API.get("/analytics/inventory", { headers }),
-    ]).then(([products, orders, users, inv]) => {
-      setInvSummary({
-        totalInventoryValue: inv.data.totalInventoryValue,
-        totalCostValue: inv.data.totalCostValue,
-        totalPotentialProfit: inv.data.totalPotentialProfit,
-      });
+      API.get(`/analytics/monthly?year=${year}`, { headers }),
+      API.get('/analytics/best-by-category', { headers }),
+      API.get('/analytics/channels', { headers }),
+    ]).then(([products, orders, users, inv, monthly, bestCat, chan]) => {
+      setBestByCategory(bestCat.data);
+      setChannels(chan.data.channels || []);
       const revenue = orders.data.reduce((s, o) => s + o.totalAmount, 0);
       setStats({
         products: products.data.total,
@@ -91,167 +85,309 @@ export default function AdminDashboard() {
         users: users.data.length,
         revenue,
       });
-      setRecentOrders(orders.data.slice(0, 5));
+      setInvSummary({
+        totalInventoryValue: inv.data.totalInventoryValue,
+        totalCostValue: inv.data.totalCostValue,
+        totalPotentialProfit: inv.data.totalPotentialProfit,
+      });
+      setRecentOrders(orders.data.slice(0, 10));
+      setMonthly(monthly.data.months);
+      setCurrentMonth(monthly.data.currentSummary);
+
+      // Order status breakdown
+      const os = { pending: 0, processing: 0, delivered: 0, cancelled: 0 };
+      orders.data.forEach(o => {
+        if (o.status === 'Pending') os.pending++;
+        else if (o.status === 'Processing' || o.status === 'Shipped') os.processing++;
+        else if (o.status === 'Delivered') os.delivered++;
+        else if (o.status === 'Cancelled') os.cancelled++;
+      });
+      setOrderStats(os);
+
+      // Top selling products by order count
+      const productMap = {};
+      orders.data.forEach(o => {
+        o.items?.forEach(item => {
+          const id = item.product?._id || item.product;
+          if (!productMap[id]) productMap[id] = { name: item.name, image: item.image, count: 0 };
+          productMap[id].count += item.quantity;
+        });
+      });
+      const sorted = Object.values(productMap).sort((a, b) => b.count - a.count).slice(0, 4);
+      setTopProducts(sorted);
     }).catch(console.error)
       .finally(() => setLoading(false));
   }, [user]);
 
-  useEffect(() => {
-    setChartLoading(true);
-    API.get(`/analytics/monthly?year=${year}`, { headers })
-      .then(res => {
-        setMonthly(res.data.months);
-        setCurrentMonth(res.data.currentSummary);
-      })
-      .catch(console.error)
-      .finally(() => setChartLoading(false));
-  }, [user, year]);
+  const filteredOrders = recentOrders.filter(o =>
+    o._id.slice(-8).toLowerCase().includes(orderFilter.toLowerCase()) ||
+    o.user?.name?.toLowerCase().includes(orderFilter.toLowerCase())
+  );
+
+  const now = new Date();
+  const dateRange = `${now.toLocaleDateString('en-PH', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+
+function BarChart({ data }) {
+  const max = Math.max(...data.map(d => d.revenue), 1);
+  return (
+    <div className="flex flex-col h-full">
+      {/* Bars */}
+      <div className="flex items-end gap-1 flex-1" style={{ minHeight: 0 }}>
+        {data.map((d, i) => (
+          <div key={i} className="flex-1 flex flex-col justify-end group relative h-full">
+            <div
+              className="w-full bg-gray-600 hover:bg-[#C8A03C] rounded-sm transition-colors cursor-pointer"
+              style={{ height: `${Math.max((d.revenue / max) * 100, d.revenue > 0 ? 4 : 0)}%` }}
+            />
+            {d.revenue > 0 && (
+              <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white text-black text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+                ₱{d.revenue.toLocaleString()}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      {/* Month labels */}
+      <div className="flex gap-1 mt-1 flex-shrink-0">
+        {data.map((d, i) => (
+          i % 2 === 0 && (
+            <div key={i} className="text-center" style={{ flex: 2 }}>
+              <span className="text-[9px] text-gray-500">{d.monthName}</span>
+            </div>
+          )
+        ))}
+      </div>
+    </div>
+  );
+}
 
   return (
     <AdminLayout>
-      <div className="flex flex-col gap-4 bg-black ">
+      <div className="flex flex-col gap-4 bg-[#0f0f0f] min-h-full -m-4 lg:-m-6 p-4 lg:p-6  ">
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 ">
-          <StatCard title="Products" value={loading ? "..." : stats.products} link="/admin/products"
-            color="bg-[#C8A03C]/10 text-[#C8A03C]"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>} />
-          <StatCard title="Orders" value={loading ? "..." : stats.orders} link="/admin/orders"
-            color="bg-blue-50 text-blue-500"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>} />
-          <StatCard title="Users" value={loading ? "..." : stats.users} link="/admin/users"
-            color="bg-purple-50 text-purple-500"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>} />
-          <StatCard title="Total Revenue" value={loading ? "..." : `₱${stats.revenue.toLocaleString()}`} link="/admin/orders"
-            color="bg-green-50 text-green-500"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>} />
-          <StatCard title="Inventory Value" value={loading ? "..." : `₱${invSummary.totalInventoryValue.toLocaleString()}`} link="/admin/products"
-            color="bg-orange-50 text-orange-500"
-            sub="At selling price"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>} />
-          <StatCard title="Potential Profit" value={loading ? "..." : `₱${invSummary.totalPotentialProfit.toLocaleString()}`} link="/admin/products"
-            color="bg-teal-50 text-teal-500"
-            sub="If all stock sells"
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>} />
+        {/* Header */}
+        <div className="flex items-center justify-between flex-wrap gap-3 ">
+          <h1 className="text-xl font-bold text-white">Sales Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-[#1a1a1a] border border-gray-700 px-3 py-2 text-xs text-gray-300">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              {dateRange}
+            </div>
+          </div>
         </div>
 
-        {/* Monthly Performance */}
-        <div className="bg-white/20 p-4 rounded-2xl border-white/20 border-[0.1px]">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h2 className="text-sm font-bold text-white">Monthly Performance</h2>
-            <select
-              value={year}
-              onChange={e => setYear(Number(e.target.value))}
-              className="border border-gray-200 px-3 py-1.5 text-xs focus:outline-none bg-white cursor-pointer"
-            >
-              {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
-            </select>
+        {/* Top row — chart + stat cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 ">
+
+          {/* Revenue chart */}
+          <div className="bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl ">
+            <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
+              <div>
+                <p className="text-sm font-bold text-white">Revenue Chart</p>
+                <p className="text-xs text-gray-500">Monthly {year}</p>
+              </div>
+              <div className="flex gap-4">
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-[1px]">This Month</p>
+                  <p className="text-lg font-bold text-white">₱{currentMonth?.revenue?.toLocaleString() || 0}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-[1px]">Profit</p>
+                  <p className="text-lg font-bold text-[#C8A03C]">₱{currentMonth?.profit?.toLocaleString() || 0}</p>
+                </div>
+              </div>
+            </div>
+            <div className="h-40">
+              {loading ? (
+                <div className="h-full bg-gray-800 animate-pulse rounded" />
+              ) : (
+                <BarChart data={monthly} />
+              )}
+            </div>
           </div>
 
-          {/* Current month summary */}
-          {currentMonth && (
-            <div className="grid grid-cols-3 gap-3 mb-5">
-              <div className="bg-green-50 p-3 rounded">
-                <p className="text-[10px] text-gray-400 uppercase tracking-[1px]">This Month Revenue</p>
-                <p className="text-base font-bold text-green-700">₱{currentMonth.revenue.toLocaleString()}</p>
+          {/* Stat cards 2x2 */}
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: "Total Revenue", value: `₱${stats.revenue.toLocaleString()}`, sub: `${stats.orders} orders`, color: "text-green-400", icon: "↑" },
+              { label: "Total Income", value: `₱${invSummary.totalPotentialProfit.toLocaleString()}`, sub: "Potential profit", color: "text-green-400", icon: "↑" },
+              { label: "Total Expense", value: `₱${invSummary.totalCostValue.toLocaleString()}`, sub: "Cost of inventory", color: "text-red-400", icon: "↓" },
+              { label: "Inventory Value", value: `₱${invSummary.totalInventoryValue.toLocaleString()}`, sub: "At selling price", color: "text-green-400", icon: "↑" },
+            ].map((card, i) => (
+              <div key={i} className="bg-[#1a1a1a] border border-white/5 pt-4 rounded-2xl  ">
+                <p className=" text-1xl font-bold  text-white  tracking-[1px] pl-4 mb-2">{card.label}</p>
+                 <div key={i} className="bg-[#1a1a1a] border border-white/5  p-4 rounded-2xl ">           
+                <p className="text-2xl font-bold text-white mb-1">{loading ? "..." : card.value}</p>
+                <p className={`text-sm ${card.color}`}>{card.icon} {card.sub}</p>
+                </div>
               </div>
-              <div className="bg-blue-50 p-3 rounded">
-                <p className="text-[10px] text-gray-400 uppercase tracking-[1px]">This Month Profit</p>
-                <p className="text-base font-bold text-blue-700">₱{currentMonth.profit.toLocaleString()}</p>
-              </div>
-              <div className="bg-[#C8A03C]/10 p-3 rounded">
-                <p className="text-[10px] text-gray-400 uppercase tracking-[1px]">This Month Orders</p>
-                <p className="text-base font-bold text-[#C8A03C]">{currentMonth.orders}</p>
-              </div>
-            </div>
-          )}
-
-          {chartLoading ? (
-            <div className="h-32 bg-gray-100 animate-pulse rounded" />
-          ) : (
-            <div className="flex flex-col gap-4">
-              <BarChart data={monthly} valueKey="revenue" color="bg-green-400" label="Revenue (₱)" />
-              <BarChart data={monthly} valueKey="profit" color="bg-blue-400" label="Profit (₱)" />
-              <BarChart data={monthly} valueKey="orders" color="bg-[#C8A03C]" label="Orders" />
-            </div>
-          )}
+            ))}
+          </div>
         </div>
 
-        {/* Recent Orders */}
-        <div className="bg-white">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h2 className="text-sm font-bold text-[#1a1410]">Recent Orders</h2>
-            <Link to="/admin/orders" className="text-xs text-[#C8A03C] no-underline hover:underline">View all</Link>
+        {/* Bottom row — best selling + order tracking */}
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
+
+          {/* Best selling by category + channel analytics */}
+          <div className="flex flex-col gap-4">
+
+            {/* Best by category */}
+            <div className="bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-bold text-white">Best by Category</p>
+                <Link to="/admin/products" className="w-7 h-7 bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white no-underline">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                </Link>
+              </div>
+              <p className="text-[10px] text-gray-500 mb-4">Top sellers per category</p>
+              {loading ? (
+                [...Array(3)].map((_, i) => (
+                  <div key={i} className="h-3 bg-gray-800 rounded animate-pulse mb-2" />
+                ))
+              ) : bestByCategory.length === 0 ? (
+                <p className="text-xs text-gray-500 text-center py-4">No sales yet</p>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {bestByCategory.map((cat, i) => (
+                    <div key={i} className="border border-white/5 p-3 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-[10px] font-bold text-[#C8A03C] uppercase tracking-[1.5px]">{cat.category}</p>
+                        <p className="text-[10px] text-gray-500">{cat.totalSold} sold</p>
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        {cat.topProducts.map((p, j) => (
+                          <div key={j} className="flex items-center gap-2">
+                            <div className="w-7 h-7 bg-gray-800 overflow-hidden flex-shrink-0">
+                              <img src={p.image || "https://placehold.co/28x28?text=?"} alt={p.name} className="w-full h-full object-cover" />
+                            </div>
+                            <p className="text-[11px] text-gray-300 flex-1 truncate">{p.name}</p>
+                            <p className="text-[11px] text-green-400 font-bold">{p.count}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Sales by channel */}
+            <div className="bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl">
+              <p className="text-sm font-bold text-white mb-1">Sales by Channel</p>
+              <p className="text-[10px] text-gray-500 mb-4">Where you sell the most</p>
+              {loading ? (
+                <div className="h-20 bg-gray-800 rounded animate-pulse" />
+              ) : channels.length === 0 ? (
+                <p className="text-xs text-gray-500 text-center py-4">No sales data yet</p>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {channels.map((c, i) => {
+                    const colors = ["bg-blue-500","bg-green-500","bg-[#C8A03C]","bg-purple-500","bg-teal-500","bg-orange-500","bg-red-500"];
+                    return (
+                      <div key={i}>
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-[11px] text-gray-300">{c.channel}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-[11px] text-gray-400">{c.count} orders</p>
+                            <p className="text-[11px] font-bold text-white">{c.percentage}%</p>
+                          </div>
+                        </div>
+                        <div className="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                          <div className={`h-full ${colors[i % colors.length]} rounded-full transition-all`} style={{ width: `${c.percentage}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Mobile card view */}
-          <div className="block lg:hidden">
-            {loading ? (
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="px-4 py-3 border-b border-gray-50 animate-pulse">
-                  <div className="h-3 bg-gray-100 rounded w-1/2 mb-2" />
-                  <div className="h-3 bg-gray-100 rounded w-1/3" />
-                </div>
-              ))
-            ) : recentOrders.length === 0 ? (
-              <p className="px-4 py-8 text-center text-gray-400 text-sm">No orders yet</p>
-            ) : (
-              recentOrders.map(order => (
-                <div key={order._id} className="px-4 py-3 border-b border-gray-50">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-xs font-mono text-[#1a1410] font-bold">#{order._id.slice(-8).toUpperCase()}</p>
-                    <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2 py-0.5 rounded-full ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>
-                      {order.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs text-gray-500">{order.user?.name || "—"}</p>
-                    <p className="text-xs font-bold text-[#1a1410]">₱{order.totalAmount.toLocaleString()}</p>
-                  </div>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString('en-PH')}</p>
-                </div>
-              ))
-            )}
-          </div>
+          {/* Order tracking */}
+          <div className="bg-[#1a1a1a] border border-gray-800 p-5 rounded-2xl">
+            <div className="flex items-start justify-between mb-4 flex-wrap gap-2">
+              <div>
+                <p className="text-sm font-bold text-white">Track Order Status</p>
+                <p className="text-[10px] text-gray-500">Analyze growth and changes in order patterns</p>
+              </div>
+              <button className="flex items-center gap-1.5 text-xs text-gray-300 border border-gray-700 px-3 py-1.5 bg-transparent cursor-pointer hover:border-gray-500 transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
 
-          {/* Desktop table view */}
-          <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left px-5 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Order ID</th>
-                  <th className="text-left px-5 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Customer</th>
-                  <th className="text-left px-5 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Amount</th>
-                  <th className="text-left px-5 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Status</th>
-                  <th className="text-left px-5 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  [...Array(5)].map((_, i) => (
-                    <tr key={i} className="border-b border-gray-50">
-                      <td colSpan={5} className="px-5 py-3"><div className="h-4 bg-gray-100 rounded animate-pulse" /></td>
-                    </tr>
-                  ))
-                ) : recentOrders.length === 0 ? (
-                  <tr><td colSpan={5} className="px-5 py-8 text-center text-gray-400 text-sm">No orders yet</td></tr>
-                ) : (
-                  recentOrders.map(order => (
-                    <tr key={order._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="px-5 py-3 text-xs font-mono text-[#1a1410]">#{order._id.slice(-8).toUpperCase()}</td>
-                      <td className="px-5 py-3 text-xs text-gray-600">{order.user?.name || "—"}</td>
-                      <td className="px-5 py-3 text-xs font-bold text-[#1a1410]">₱{order.totalAmount.toLocaleString()}</td>
-                      <td className="px-5 py-3">
-                        <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2.5 py-1 rounded-full ${statusColors[order.status] || "bg-gray-100 text-gray-600"}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3 text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString('en-PH')}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+            {/* Status counters */}
+            <div className="grid grid-cols-4 gap-3 mb-5">
+              {[
+                { label: "New Order", value: orderStats.pending, color: "bg-blue-500", pct: "0.5%", up: true },
+                { label: "On Progress", value: orderStats.processing, color: "bg-teal-500", pct: "0.3%", up: false },
+                { label: "Completed", value: orderStats.delivered, color: "bg-green-500", pct: "0.5%", up: true },
+                { label: "Cancelled", value: orderStats.cancelled, color: "bg-orange-500", pct: "0.5%", up: false },
+              ].map((s, i) => (
+                <div key={i}>
+                  <p className="text-2xl font-bold text-white">{loading ? "..." : s.value}</p>
+                  <p className="text-[10px] text-gray-400 mb-1.5">{s.label} <span className={s.up ? "text-green-400" : "text-red-400"}>• {s.pct}</span></p>
+                  <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+                    <div className={`h-full ${s.color} rounded-full`} style={{ width: `${Math.max((s.value / (stats.orders || 1)) * 100, 4)}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Orders table */}
+            <div className="flex items-center gap-3 mb-3">
+              <div className="relative flex-1">
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input
+                  value={orderFilter}
+                  onChange={e => setOrderFilter(e.target.value)}
+                  placeholder="Filter orders..."
+                  className="w-full bg-[#0f0f0f] border border-gray-700 pl-8 pr-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-gray-500 placeholder-gray-600"
+                />
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-800">
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px]">ID</th>
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px]">Customer</th>
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px] hidden sm:table-cell">Qty</th>
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px]">Amount</th>
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px] hidden md:table-cell">Payment</th>
+                    <th className="text-left py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[1px]">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    [...Array(4)].map((_, i) => (
+                      <tr key={i} className="border-b border-gray-800/50">
+                        <td colSpan={6} className="py-2"><div className="h-3 bg-gray-800 rounded animate-pulse" /></td>
+                      </tr>
+                    ))
+                  ) : filteredOrders.length === 0 ? (
+                    <tr><td colSpan={6} className="py-6 text-center text-gray-500 text-xs">No orders found</td></tr>
+                  ) : (
+                    filteredOrders.map(order => (
+                      <tr key={order._id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                        <td className="py-2.5 text-[10px] font-mono text-gray-400">#{order._id.slice(-6).toUpperCase()}</td>
+                        <td className="py-2.5 text-xs text-gray-300">{order.user?.name || "—"}</td>
+                        <td className="py-2.5 text-xs text-gray-400 hidden sm:table-cell">{order.items?.reduce((s, i) => s + i.quantity, 0) || 0}</td>
+                        <td className="py-2.5 text-xs font-bold text-white">₱{order.totalAmount?.toLocaleString()}</td>
+                        <td className="py-2.5 text-[10px] text-gray-400 hidden md:table-cell">{order.paymentMethod || "COD"}</td>
+                        <td className="py-2.5">
+                          <div className="flex items-center gap-1.5">
+                            <div className={`w-1.5 h-1.5 rounded-full ${statusColors[order.status] || "bg-gray-500"}`} />
+                            <span className={`text-[10px] font-semibold ${statusText[order.status] || "text-gray-400"}`}>{order.status}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

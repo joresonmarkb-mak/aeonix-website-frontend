@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import AdminLayout from "./AdminLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import API from "../../services/Api.js";
-import ManualSaleModal from "./Manualsalemodal.jsx";
+import ManualSaleModal from "./ManualSaleModal.jsx";
 
 const emptyForm = {
   name: "", referenceNumber: "", brand: "", description: "", price: "",
   category: "", stock: "", condition: "", movement: "", costPrice: "",
   caseDiameter: "", caseThickness: "", material: "", waterResistance: "", crystal: "",
-  isFeatured: false, isNewArrival: false, discount: "",
+  isFeatured: false, isNewArrival: false, discount: "",status: "In Stock",
 };
 
 const marginColor = (margin) => {
@@ -23,7 +23,6 @@ const marginBg = (margin) => {
   return "bg-red-100 text-red-600";
 };
 
-// ── F component OUTSIDE AdminProducts to prevent remount ──
 const F = ({ label, name, form, setForm, type = "text", options }) => (
   <div className="flex flex-col gap-1">
     <label className="text-[10px] tracking-[1.5px] uppercase text-gray-500">{label}</label>
@@ -57,10 +56,10 @@ export default function AdminProducts() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [showInventory, setShowInventory] = useState(false);
-  const [view, setView] = useState("list"); // list | tile
+  const [view, setView] = useState("tile");
   const [inventorySummary, setInventorySummary] = useState({ totalInventoryValue: 0, totalCostValue: 0, totalPotentialProfit: 0 });
-  const fileRef = useRef();
   const [saleProduct, setSaleProduct] = useState(null);
+  const fileRef = useRef();
 
   const headers = { Authorization: `Bearer ${user?.token}` };
 
@@ -114,6 +113,7 @@ export default function AdminProducts() {
       isFeatured: product.isFeatured || false,
       isNewArrival: product.isNewArrival || false,
       discount: product.discount || "",
+      status: product.status || "In Stock",
     });
     setFiles([]);
     setError("");
@@ -164,7 +164,6 @@ export default function AdminProducts() {
     p.brand.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Compute margin for a product
   const getMargin = (p) => {
     if (!p.costPrice || !p.price) return null;
     return Number(((p.price - p.costPrice) / p.price * 100).toFixed(1));
@@ -174,7 +173,7 @@ export default function AdminProducts() {
     <AdminLayout>
       <div className="flex flex-col gap-4">
 
-        {/* Inventory summary — shown when inventory mode on */}
+        {/* Inventory summary */}
         {showInventory && (
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-white p-3">
@@ -199,15 +198,11 @@ export default function AdminProducts() {
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..."
               className="pl-8 pr-4 py-2 border border-gray-200 text-sm focus:outline-none focus:border-[#1a1410] w-full" />
           </div>
-
           <div className="flex gap-2 flex-wrap">
-            {/* Inventory toggle */}
             <button onClick={() => setShowInventory(!showInventory)}
               className={`px-3 py-2 text-xs font-bold tracking-[1px] uppercase border transition-colors cursor-pointer ${showInventory ? "bg-[#1a1410] text-[#C8A03C] border-[#1a1410]" : "bg-white text-gray-500 border-gray-200 hover:border-[#1a1410]"}`}>
               📊 {showInventory ? "Hide Costs" : "Show Costs"}
             </button>
-
-            {/* View toggle */}
             <div className="flex border border-gray-200 overflow-hidden">
               <button onClick={() => setView("list")}
                 className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "list" ? "bg-[#1a1410] text-[#C8A03C]" : "bg-white text-gray-400 hover:text-[#1a1410]"}`}>
@@ -218,7 +213,6 @@ export default function AdminProducts() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
               </button>
             </div>
-
             <button onClick={openCreate}
               className="px-4 py-2 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[1.5px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer">
               + Add
@@ -233,7 +227,10 @@ export default function AdminProducts() {
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-white animate-pulse">
                   <div className="aspect-square bg-gray-200" />
-                  <div className="p-3 space-y-2"><div className="h-3 bg-gray-200 rounded w-2/3" /><div className="h-3 bg-gray-200 rounded w-1/2" /></div>
+                  <div className="p-3 space-y-2">
+                    <div className="h-3 bg-gray-200 rounded w-2/3" />
+                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -247,6 +244,11 @@ export default function AdminProducts() {
                       <img src={p.images?.[0]?.replace(/"/g, '') || "https://placehold.co/200x200?text=?"} alt={p.name} className="w-full h-full object-cover" />
                       <span className={`absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 ${p.stock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
                         {p.stock > 0 ? `${p.stock}` : "Out"}
+                      </span>
+                      <span className={`absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 
+                        ${p.status === 'Servicing' ? 'bg-orange-100 text-orange-600' : p.status === 'Sold' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`}>
+                          
+                        {p.status || 'In Stock'}
                       </span>
                     </div>
                     <div className="p-2.5">
@@ -272,7 +274,7 @@ export default function AdminProducts() {
           )
         )}
 
-        {/* List/Table view */}
+        {/* List view */}
         {view === "list" && (
           <div className="bg-white overflow-x-auto">
             <table className="w-full">
@@ -287,6 +289,7 @@ export default function AdminProducts() {
                   </>}
                   <th className="text-left px-4 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Stock</th>
                   <th className="text-left px-4 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Condition</th>
+                  <th className="text-left px-4 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Status</th>
                   <th className="text-left px-4 py-3 text-[10px] font-bold tracking-[1.5px] uppercase text-gray-400">Actions</th>
                 </tr>
               </thead>
@@ -337,9 +340,20 @@ export default function AdminProducts() {
                           </span>
                         </td>
                         <td className="px-4 py-3">
+                           <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2 py-0.5 ${
+                              p.status === 'Sold' ? 'bg-red-100 text-red-600' :
+                              p.status === 'Servicing' ? 'bg-orange-100 text-orange-600' :
+                              'bg-green-100 text-green-700'
+                            }`}>
+                              {p.status || 'In Stock'}
+                            </span>
+                          </td>
+                        <td className="px-4 py-3">
                           <div className="flex gap-2">
                             <button onClick={() => openEdit(p)} className="text-xs text-blue-500 hover:underline bg-transparent border-none cursor-pointer">Edit</button>
-                            <button onClick={() => setSaleProduct(p)} className="text-xs text-green-600 hover:underline bg-transparent border-none cursor-pointer">Sold</button>
+                          {p.status === 'In Stock' && (
+                            <button onClick={() => setSaleProduct(p)} className="flex-1 text-[10px] py-1 bg-green-50 hover:bg-green-100 text-green-600 border-none cursor-pointer transition-colors">Sold</button>
+                          )}
                             <button onClick={() => handleDelete(p._id)} className="text-xs text-red-400 hover:underline bg-transparent border-none cursor-pointer">Delete</button>
                           </div>
                         </td>
@@ -353,7 +367,7 @@ export default function AdminProducts() {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowModal(false)} />
@@ -362,10 +376,8 @@ export default function AdminProducts() {
               <h2 className="font-bold text-[#1a1410] text-sm">{editing ? "Edit Product" : "Add Product"}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-[#1a1410] bg-transparent border-none cursor-pointer text-xl">×</button>
             </div>
-
             <div className="p-6 flex flex-col gap-4">
               {error && <p className="text-red-500 text-xs">{error}</p>}
-
               <div className="grid grid-cols-2 gap-4">
                 <F label="Name" name="name" form={form} setForm={setForm} />
                 <F label="Reference Number" name="referenceNumber" form={form} setForm={setForm} />
@@ -376,9 +388,9 @@ export default function AdminProducts() {
                 <F label="Discount (%)" name="discount" type="number" form={form} setForm={setForm} />
                 <F label="Category" name="category" options={["Classic", "Divers", "Men's", "Women's", "Unisex"]} form={form} setForm={setForm} />
                 <F label="Condition" name="condition" options={["Brand New", "Pre-owned"]} form={form} setForm={setForm} />
+                <F label="Status" name="status" options={["In Stock", "Servicing", "Sold"]} form={form} setForm={setForm} />
               </div>
 
-              {/* Margin preview */}
               {form.price && form.costPrice && (
                 <div className="bg-gray-50 px-4 py-3 flex items-center justify-between">
                   <p className="text-xs text-gray-500">Margin preview</p>
@@ -431,7 +443,6 @@ export default function AdminProducts() {
           </div>
         </div>
       )}
-    
 
       {/* Manual Sale Modal */}
       {saleProduct && (
