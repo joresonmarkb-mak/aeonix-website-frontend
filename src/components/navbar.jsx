@@ -30,7 +30,7 @@ function Navbar({ cartCount }) {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all  duration-300 px-[5%] ${scrolled || mobileOpen ? "bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#C8A03C]/10" : "bg-transparent"}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all font-sanss duration-300 px-[5%] ${scrolled || mobileOpen ? "bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#C8A03C]/10" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto flex items-center h-16 gap-4">
 
           {/* Logo */}

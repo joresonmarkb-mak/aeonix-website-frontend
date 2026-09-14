@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/navbar.jsx";
 import Footer from "../components/footer.jsx";
-import TrustBar from "../components/trustBar.jsx";
 import API from "../services/Api.js";
 
 // ── Filter Section ────────────────────────────────────────
@@ -12,7 +11,7 @@ function FilterSection({ title, children, defaultOpen = false }) {
     <div className="border-b border-gray-200 py-4">
       <button onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between text-left bg-transparent border-none cursor-pointer">
-        <span className="text-xs font-bold tracking-[2px] uppercase text-[#1a1410]">{title}</span>
+        <span className="text-xs font-bold tracking-[2px] uppercase text-white">{title}</span>
         <span className={`text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
         </span>
@@ -45,15 +44,16 @@ function Sidebar({ filters, setFilters, onReset }) {
   );
 
   return (
-    <div className="bg-white p-5">
+    <div className="bg-[#0a0a0a] text-white  p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold tracking-[2px] uppercase text-[#1a1410]">Filters</h3>
-        <button onClick={onReset} className="text-xs text-[#C8A03C] hover:underline bg-transparent border-none cursor-pointer">Reset all</button>
+        <h3 className="text-sm font-bold tracking-[2px] uppercase text-white">Filters</h3>
+        <button onClick={onReset} className="text-xs text-white hover:underline bg-transparent border-none cursor-pointer">Reset all</button>
       </div>
-      <FilterSection title="Condition" defaultOpen={true}>
+      <FilterSection title="Condition" titleClassName="text-white" defaultOpen={true} >
         <CheckItem label="Brand New" filterKey="condition" value="Brand New" />
         <CheckItem label="Pre-owned" filterKey="condition" value="Pre-owned" />
       </FilterSection>
+    
       {/* <FilterSection title="Availability" defaultOpen="instock">
         <CheckItem label="In Stock" filterKey="availability" value="instock" />
         <CheckItem label="Out of Stock" filterKey="availability" value="outofstock" />
@@ -66,7 +66,7 @@ function Sidebar({ filters, setFilters, onReset }) {
             className="w-full border border-gray-200 px-2 py-1.5 text-sm focus:outline-none focus:border-[#C8A03C]" />
         </div>
         <button onClick={handlePriceApply}
-          className="w-full py-1.5 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[1px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer">
+          className="w-full py-1.5 bg-[#2a2018] text-white text-xs font-bold tracking-[1px] uppercase hover:bg-[#1a1410] transition-colors border-none cursor-pointer">
           Apply
         </button>
       </FilterSection>
@@ -74,7 +74,7 @@ function Sidebar({ filters, setFilters, onReset }) {
         <CheckItem label="Automatic" filterKey="function" value="Automatic" />
         <CheckItem label="Quartz" filterKey="function" value="Quartz" />
       </FilterSection>
-      <FilterSection title="Category">
+      <FilterSection title="Category" >
         {["Classic", "Divers", "Men's", "Women's", "Unisex"].map(cat => (
           <CheckItem key={cat} label={cat} filterKey="category" value={cat} />
         ))}
@@ -86,7 +86,7 @@ function Sidebar({ filters, setFilters, onReset }) {
 // ── Product Card ──────────────────────────────────────────
 function WatchCard({ watch }) {
   return (
-    <Link to={`/watches/${watch._id}`} className="no-underline group">
+    <Link to={`/watches/${watch._id}`} className="no-underline group bg-[#211C0A]">
       <div className="bg-[#f5f5f5] relative overflow-hidden">
         {watch.discount > 0 && (
           <span className="absolute top-3 right-3 z-10 bg-[#C8A03C] text-black text-[10px] font-bold px-2 py-1">
@@ -102,8 +102,8 @@ function WatchCard({ watch }) {
         </div>
       </div>
       <div className="pt-3 pb-5 text-center">
-        <p className="text-xs font-bold tracking-[2px] uppercase text-[#1a1410] mb-1">{watch.brand}</p>
-        <p className="text-sm text-gray-600 mb-0.5">{watch.name}</p>
+        <p className="text-xs font-bold text-white tracking-[2px] uppercase text-[#1a1410] mb-1">{watch.brand}</p>
+        <p className="text-xl text-white mb-0.5">{watch.name}</p>
         <p className="text-xs text-gray-400 mb-1.5">{watch.specifications?.caseDiameter}</p>
         <p className="text-[#C8A03C] text-sm font-bold">₱{watch.price.toLocaleString()} <span className="text-gray-400 font-normal">only</span></p>
       </div>
@@ -169,19 +169,19 @@ function Watches() {
   const handleReset = () => setFilters(defaultFilters);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0a0a0a] font-sanss">
       {/* Page header */}
       <div className="bg-[#1a1410] pt-28 pb-10 px-[5%]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-8xl mx-auto">
           <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-2">Our Collection</p>
           <h1 className="text-4xl text-[#f0ece4] font-bold">All Watches</h1>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-[5%] py-10">
+      <div className="max-w-8xl mx-auto px-[5%] py-10">
 
         {/* Search + Sort + Mobile Filter Toggle */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="flex flex-col  sm:flex-row gap-4 mb-8">
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input type="text" placeholder="Search watches..." value={filters.search}
@@ -189,7 +189,7 @@ function Watches() {
               className="w-full pl-9 pr-4 py-2.5 border border-gray-200 text-sm focus:outline-none focus:border-[#C8A03C]" />
           </div>
           <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value, page: 1 }))}
-            className="border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#C8A03C] bg-white cursor-pointer">
+            className="border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-[#C8A03C] bg-[#1a1410] text-white cursor-pointer">
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="price-asc">Price: Low to High</option>
@@ -235,7 +235,7 @@ function Watches() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {watches.map(watch => <WatchCard key={watch._id} watch={watch} />)}
               </div>
             )}
@@ -267,7 +267,6 @@ export default function AllWatches() {
     <div className="font-sans">
       <Navbar />
       <Watches />
-      <TrustBar />
       <Footer />
     </div>
   );

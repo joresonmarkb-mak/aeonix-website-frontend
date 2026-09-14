@@ -6,6 +6,7 @@ import TrustBar from "../components/trustBar.jsx";
 import AuthModal from "./Authmodal.jsx";
 import CategorySplit from "../components/categorySplit.jsx";
 import Featuredarticle from "../components/Featuredarticle.jsx";
+import EmailSubscription from "../components/EmailSubscription.jsx";
 // ── Mock Data ──────────────────────────────────────────────
 
 
@@ -35,7 +36,7 @@ const carouselImages = [
   }, []);
  
   return (
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
+      <section className="relative min-h-screen  flex items-center overflow-hidden bg-[#0a0a0a]">
      <div
         className="absolute inset-0 overflow-hidden"
         style={{
@@ -52,17 +53,17 @@ const carouselImages = [
       <div className="relative max-w-[100rem] mx-auto px-[4%] w-full grid md:grid-cols-[55%_45%] gap-12 items-center">
         {/* Text column */}
         <div className="max-w-3xl">
-          <h1 className="font-sans text-3xl sm:text-7xl lg:text-7xl text-[#f0ece4]  mb-6 font-bold leading-tight">
-            Timeless elegance   <br/>   on your wrist
-          </h1>  
-          <p className="text-gray-400 text-xl leading-relaxed mb-8 max-w-xl">
+        <h1 className="font-sans  text-[#f0ece4] mb-6 leading-tight">
+          <span className="text-[#FAD136] text-[clamp(2.5rem,8vw,10rem)] font-handwriting">Timeless Elegance</span> <br/> <div className=" mt-[-3rem] font-sanss text-[clamp(2.5rem,4vw,6rem)]">ON YOUR WRIST</div> 
+        </h1>
+          <p className="text-gray-400 text-xl leading-relaxed mb-8 max-w-xl font-sanss">
             Discover the world of Timeless Elegance, where every timepiece
             tells a story of craftsmanship, heritage, and sophistication.
           </p>
           <button
             type="button"
             onClick={onShopNow}
-            className="px-10 py-4 bg-[#C8A03C] hover:bg-[#e0b84a] text-black text-base font-bold transition-colors border-none cursor-pointer rounded-sm"
+            className="px-10 py-4 bg-[#FAD136] font-sanss hover:bg-[#e0b84a] text-black text-base font-bold transition-colors border-none cursor-pointer rounded-sm"
           >
             Discover Collection
           </button>
@@ -193,7 +194,7 @@ function NewArrivals() {
           <>
             <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6  ">
               {visible.map(watch => (
-                <div key={watch._id} className="bg-white group cursor-pointer hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 ">
+                <div key={watch._id} className="bg-[#211C0A] group cursor-pointer hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 ">
                   <div className="relative overflow-hidden aspect-square">
                     <img
                       src={watch.images?.[0]?.replace(/"/g, '') || "https://placehold.co/300x300?text=No+Image"}
@@ -204,9 +205,9 @@ function NewArrivals() {
                       {watch.condition}
                     </span>
                   </div>
-                  <div className="p-4 text-center ">
+                  <div className="p-4 text-center  font-sanss ">
                     <p className="text-gray-400 text-[11px] tracking-[2px] uppercase mb-1">{watch.brand}</p>
-                    <p className="text-base text-[#1a1410] font-bold mb-2">{watch.name}</p>
+                    <p className="text-base text-white font-bold mb-2">{watch.name}</p>
                     <p className="text-[#C8A03C] text-base font-bold">₱{watch.price.toLocaleString()}</p>
                   </div>
                 </div>
@@ -240,27 +241,22 @@ function NewArrivals() {
 // ── Style Budget Banner ───────────────────────────────────
 function StyleBudgetBanner() {
   return (
-    <section className="relative py-24 px-[5%] bg-[#1a1410] overflow-hidden">
+    <section className=" font-sanss relative py-30 px-[5%] bg-[#1a1410] overflow-hidden">
       <div
-        className="absolute inset-0 bg-cover bg-center "
+        className="absolute inset-0 bg-cover bg-center  "
         style={{ backgroundImage: "url(https://res.cloudinary.com/dp3iviwzj/image/upload/v1789173532/Group_15_ml8jdv.png)" }}
       />
       <div className="relative max-w-7xl mx-auto flex justify-start">
         <div className="max-w-lg">
           <p className="text-yellow-400 text-[11px] tracking-[4px] uppercase mb-4">For Every Budget</p>
-          <h2 className="font-serif text-5xl md:text-6xl text-[#f0ece4]  leading-tight mb-5">
-            Style That Fits<br />Your Budget
+          <h2 className=" text-xl md:text-6xl text-[#f0ece4]  leading-tight mb-5">
+            <div className="inline-block font-bold ">WATCH FOR</div><br /><div className="inline-block text-[#C8A03C]">OCCASION</div>
           </h2>
           <p className="text-white text-base leading-relaxed mb-8">
-            Carefully selected watches designed to elevate your everyday look without compromising your budget.
+            Discover the world of Timeless Elegance, where every timepiece tells a story of craftsmanship, heritage, and sophistication.
           </p>
-          <div className="flex items-center gap-2 mb-8">
-            <div className="flex gap-1">
-              {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400 text-xl">★</span>)}
-            </div>
-            <span className="text-white text-sm ml-2">4.9 · 120+ reviews</span>
-          </div>
-          <a href="/allwatches" className=" inline-block px-10 py-3.5 bg-black hover:bg-[#e0b84a] text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
+         
+          <a href="/allwatches" className=" border p-5 border-white hover:bg-[#e0b84a] text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
             Explore Our Collection
           </a>
         </div>
@@ -269,57 +265,12 @@ function StyleBudgetBanner() {
   );
 }
 
+
 // ── Seiko 5 Feature ───────────────────────────────────────
 
-function FeatureCard({ feature }) {
-  return (
-    <div className="py-4">
-      <span className="font-serif text-4xl text-[#C8A03C]/20 font-bold block mb-2">{feature.num}</span>
-      <h3 className="text-[#f0ece4] text-xs font-bold tracking-wide mb-2">{feature.title}</h3>
-      <p className="text-gray-500 text-xs leading-relaxed">{feature.desc}</p>
-    </div>
-  );
-}
-
-// ── Find Your Watch ───────────────────────────────────────
-function FindYourWatch() {
-  return (
-    <section className="bg-[#f7f4ef] py-20 px-[5%] ">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-3">Browse by Style</p>
-          <h2 className="font-serif text-4xl text-[#1a1410] font-bold">Find Your Perfect Watch</h2>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 ">
-          {collections.map(col => (
-            <a key={col.id} href="#" className="relative overflow-hidden aspect-[4/3] block group no-underline">
-              <img
-                src={col.image}
-                alt={col.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/85 to-transparent" />
-              <span className="absolute bottom-5 left-5 text-bold text-lg font-semibold text-[#f0ece4] text-sm">{col.name}</span>
-            </a>
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <a href="/allwatches" className="inline-block px-11 py-3.5 bg-[#1a1410] hover:bg-yellow-400 text-white text-xs font-bold tracking-[2px] uppercase transition-colors no-underline">
-            Explore All Collections
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 
 
-
-
-// ── Footer ────────────────────────────────────────────────
 
 
 // ── Page ──────────────────────────────────────────────────
@@ -331,11 +282,12 @@ export default function Home() {
       <Navbar cartCount={2} />
       <Hero onShopNow={() => setShowAuth(true)} />
       <NewArrivals />
-      <TrustBar />
       <CategorySplit />
-      <StyleBudgetBanner />
-      <Featuredarticle />
-      <FindYourWatch />
+      <TrustBar />
+       <StyleBudgetBanner />
+       <Featuredarticle />
+      <EmailSubscription />
+     
       
       
       <Footer />

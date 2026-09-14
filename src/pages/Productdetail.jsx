@@ -10,6 +10,8 @@ import ReviewsSection from "../components/reviewSection.jsx";
 // ── Image Gallery ─────────────────────────────────────────
 function ImageGallery({ images }) {
   const [selected, setSelected] = useState(0);
+  const [showZoom, setShowZoom] = useState(false);
+  const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
 
   const normalizeImages = (value) => {
     if (!value) return [];
@@ -41,15 +43,39 @@ function ImageGallery({ images }) {
 
   const clean = (url) => url?.replace(/"/g, '') || '';
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomPos({ x, y });
+  };
+
   return (
-    <div className="flex flex-col gap-3">
-      {/* Main image */}
-      <div className="aspect-square bg-gray-50 overflow-hidden">
+    <div className="flex flex-col gap-3 ">
+      {/* Main image with hover magnifier */}
+      <div
+        className="aspect-square bg-gray-50 overflow-hidden relative cursor-zoom-in"
+        onMouseEnter={() => setShowZoom(true)}
+        onMouseLeave={() => setShowZoom(false)}
+        onMouseMove={handleMouseMove}
+      >
         <img
           src={clean(imageList[selected])}
           alt="product"
           className="w-full h-full object-cover"
         />
+
+        {showZoom && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `url(${clean(imageList[selected])})`,
+              backgroundSize: "200%",
+              backgroundPosition: `${zoomPos.x}% ${zoomPos.y}%`,
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+        )}
       </div>
 
       {/* Thumbnails */}
@@ -59,7 +85,7 @@ function ImageGallery({ images }) {
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`w-20 h-20 flex-shrink-0 overflow-hidden border-2 transition-all cursor-pointer bg-transparent p-0 ${i === selected ? "border-[#1a1410]" : "border-transparent hover:border-gray-300"}`}
+              className={`w-20 h-20 flex-shrink-0 overflow-hidden border-2 transition-all cursor-pointer bg-transparent p-0 ${i === selected ? "border-white" : "border-transparent hover:border-gray-300"}`}
             >
               <img src={clean(img)} alt={`thumb-${i}`} className="w-full h-full object-cover" />
             </button>
@@ -74,9 +100,9 @@ function ImageGallery({ images }) {
 function SpecRow({ label, value }) {
   if (!value) return null;
   return (
-    <div className="flex gap-2 text-sm">
+    <div className="flex gap-2 text-sm ">
       <span className="text-gray-400 w-36 flex-shrink-0">{label}</span>
-      <span className="text-[#1a1410]">{value}</span>
+      <span className="text-white">{value}</span>
     </div>
   );
 }
@@ -98,7 +124,7 @@ function RecommendCard({ watch }) {
         />
       </div>
       <div className="pt-2 text-center">
-        <p className="text-[10px] font-bold tracking-[2px] uppercase text-[#1a1410] mb-0.5">{watch.brand}</p>
+        <p className="text-[10px] font-bold tracking-[2px] uppercase text-white mb-0.5">{watch.brand}</p>
         <p className="text-xs text-gray-500 mb-0.5">{watch.name}</p>
         <p className="text-xs text-gray-400 mb-1">{watch.specifications?.caseDiameter}</p>
         <p className="text-[#C8A03C] text-sm font-bold">
@@ -176,18 +202,18 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0a0a0a] font-sanss ">
       <Navbar />
 
-      <div className="max-w-5xl mx-auto px-[5%] pt-28 pb-16">
+      <div className="max-w-7xl mx-auto px-[5%] pt-28 pb-16">
 
         {/* Breadcrumb */}
         <div className="flex gap-2 text-xs text-gray-400 mb-8">
-          <Link to="/" className="hover:text-[#1a1410] no-underline">Home</Link>
+          <Link to="/" className="hover:text-white no-underline">Home</Link>
           <span>/</span>
-          <Link to="/allwatches" className="hover:text-[#1a1410] no-underline">Watches</Link>
+          <Link to="/allwatches" className="hover:text-white no-underline">Watches</Link>
           <span>/</span>
-          <span className="text-[#1a1410]">{watch.name}</span>
+          <span className="text-white">{watch.name}</span>
         </div>
 
         {/* Main content */}
@@ -200,20 +226,20 @@ export default function ProductDetail() {
           <div className="flex flex-col">
             {/* Brand + name */}
             <p className="text-xs font-bold tracking-[3px] uppercase text-gray-400 mb-1">{watch.brand}</p>
-            <h1 className=" text-2xl font-bold text-[#1a1410] mb-1">{watch.name}</h1>
+            <h1 className=" text-2xl font-bold text-white mb-1">{watch.name}</h1>
 
             {/* Reference + condition */}
             {watch.referenceNumber && (
               <p className="text-xs text-gray-400 mb-1">{watch.referenceNumber}</p>
             )}
             <p className="text-xs text-gray-500 mb-4">
-              Condition: <span className="font-semibold text-[#1a1410]">{watch.condition}</span>
+              Condition: <span className="font-semibold text-white">{watch.condition}</span>
               {watch.conditionNote && ` | ${watch.conditionNote}`}
             </p>
 
             {/* Price */}
             <div className="mb-1">
-              <span className=" text-3xl font-bold text-[#1a1410]">
+              <span className=" text-3xl font-bold text-white">
                 Php {watch.price.toLocaleString()}.00
               </span>
             </div>
@@ -236,7 +262,7 @@ export default function ProductDetail() {
               <button
                 onClick={handleAddToCart}
                 disabled={watch.stock === 0}
-                className="w-14 py-3.5 border border-[#1a1410] text-[#1a1410] hover:bg-[#1a1410] hover:text-[#C8A03C] transition-colors flex items-center justify-center border-none cursor-pointer disabled:opacity-50"
+                className="w-14 py-3.5 border border-white text-white hover:bg-black hover:text-[#C8A03C] transition-colors flex items-center justify-center border-none cursor-pointer disabled:opacity-50"
                 style={{ border: "1px solid #1a1410" }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -249,7 +275,7 @@ export default function ProductDetail() {
 
             {/* Divider */}
             <div className="border-t border-gray-100 pt-6">
-              <h3 className="text-sm font-bold text-[#1a1410] mb-4">Details</h3>
+              <h3 className="text-sm font-bold text-white mb-4">Details</h3>
               <div className="flex flex-col gap-2.5">
                 <SpecRow label="Brand" value={watch.brand} />
                 <SpecRow label="Model No." value={watch.referenceNumber} />
@@ -267,20 +293,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Recommendations */}
-        {recommendations.length > 0 && (
-          <div>
-            <h2 className="font-serif text-2xl font-bold text-[#1a1410] mb-8">
-              Our Recommendations for you
-            </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {recommendations.map(rec => (
-                <RecommendCard key={rec._id} watch={rec} />
-              ))}
-            </div>
-            <ReviewsSection productId={id} productName={watch?.name} />
-          </div>
-        )}
+       
       </div>
 
       <Footer />
