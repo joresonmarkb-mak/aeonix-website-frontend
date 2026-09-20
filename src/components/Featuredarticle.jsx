@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const articles = [
   {
@@ -100,6 +100,12 @@ const articles = [
 // ── Article Modal ─────────────────────────────────────────
  function ArticleModal({ article, onClose }) {
   const { content } = article;
+    useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4"

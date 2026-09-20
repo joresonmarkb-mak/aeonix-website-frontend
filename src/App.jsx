@@ -16,6 +16,9 @@ import AdminReviews from './pages/admin/Adminreviews.jsx';
 import Profile from './pages/Profile.jsx';
 import AdminMessages from './pages/admin/AdminMessage.jsx';
 import AdminInventory from './pages/admin/AdminInventory.jsx';
+import AdminSubscribers from './pages/admin/AdminSubscribers.jsx';
+import AdminTestimonials from './pages/admin/Admintestimonials.jsx';
+
 
 
 
@@ -38,6 +41,8 @@ function App (){
                 <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/admin/inventory" element={<AdminRoute><AdminInventory /></AdminRoute>} />
+                <Route path="/admin/subscribers" element={<AdminRoute><AdminSubscribers /></AdminRoute>} />
+                <Route path="/admin/testimonials" element={<AdminRoute><AdminTestimonials /></AdminRoute>} />
             </Routes>
         </BrowserRouter>
         

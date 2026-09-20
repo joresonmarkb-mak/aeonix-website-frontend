@@ -43,9 +43,9 @@ export default function AdminOrders() {
       <div className="flex gap-6">
 
         {/* Orders list */}
-        <div className="flex-1 bg-white">
+        <div className="flex-1 bg-[#1a1a1a] rounded-lg">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="text-sm font-bold text-[#1a1410]">All Orders ({orders.length})</h2>
+            <h2 className="text-sm font-bold text-white">All Orders ({orders.length})</h2>
           </div>
           <table className="w-full">
             <thead>
@@ -70,10 +70,10 @@ export default function AdminOrders() {
                 orders.map(order => (
                   <tr key={order._id}
                     onClick={() => setSelected(order)}
-                    className={`border-b border-gray-50 cursor-pointer transition-colors ${selected?._id === order._id ? "bg-[#C8A03C]/5" : "hover:bg-gray-50"}`}>
-                    <td className="px-5 py-3 text-xs font-mono text-[#1a1410]">#{order._id.slice(-8).toUpperCase()}</td>
-                    <td className="px-5 py-3 text-xs text-gray-600">{order.user?.name || "—"}</td>
-                    <td className="px-5 py-3 text-xs font-bold">₱{order.totalAmount.toLocaleString()}</td>
+                    className={` cursor-pointer transition-colors ${selected?._id === order._id ? "bg-[#C8A03C]/5" : "hover:bg-black"}`}>
+                    <td className="px-5 py-3 text-xs font-mono text-white">#{order._id.slice(-8).toUpperCase()}</td>
+                    <td className="px-5 py-3 text-xs text-white">{order.user?.name || "—"}</td>
+                    <td className="px-5 py-3 text-xs font-bold text-white">₱{order.totalAmount.toLocaleString()}</td>
                     <td className="px-5 py-3">
                       <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2 py-0.5 rounded-full ${statusColors[order.status]}`}>
                         {order.status}
@@ -89,20 +89,20 @@ export default function AdminOrders() {
 
         {/* Order detail panel */}
         {selected && (
-          <div className="w-80 flex-shrink-0 bg-white h-fit sticky top-6">
+          <div className="w-80 flex-shrink-0 bg-[#1a1a1a] h-fit sticky top-6 rounded-lg ">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h3 className="text-sm font-bold text-[#1a1410]">Order Detail</h3>
+              <h3 className="text-sm font-bold text-white">Order Detail</h3>
               <button onClick={() => setSelected(null)} className="text-gray-400 bg-transparent border-none cursor-pointer text-lg">×</button>
             </div>
             <div className="p-5 flex flex-col gap-4">
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-[1px] mb-1">Order ID</p>
-                <p className="text-xs font-mono">#{selected._id.slice(-8).toUpperCase()}</p>
+                <p className="text-[10px] text-white uppercase tracking-[1px] mb-1">Order ID</p>
+                <p className="text-xs font-mono text-white">#{selected._id.slice(-8).toUpperCase()}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-[1px] mb-1">Customer</p>
-                <p className="text-xs font-semibold">{selected.user?.name}</p>
-                <p className="text-xs text-gray-400">{selected.user?.email}</p>
+                <p className="text-[10px] text-white uppercase tracking-[1px] mb-1">Customer</p>
+                <p className="text-xs text-white font-semibold">{selected.user?.name}</p>
+                <p className="text-xs text-white text-gray-400">{selected.user?.email}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-[1px] mb-2">Items</p>
@@ -125,7 +125,7 @@ export default function AdminOrders() {
               <div className="border-t border-gray-100 pt-3 flex flex-col gap-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">Payment</span>
-                  <span className="font-semibold text-[#1a1410]">{selected.paymentMethod || (selected.paid ? "Credit/Debit Card" : "Cash on Delivery")}</span>
+                  <span className="font-semibold text-white">{selected.paymentMethod || (selected.paid ? "Credit/Debit Card" : "Cash on Delivery")}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">Paid</span>
@@ -145,7 +145,7 @@ export default function AdminOrders() {
                   {statuses.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
-              <div className="flex justify-between text-sm font-bold border-t border-gray-100 pt-3">
+              <div className="flex justify-between text-sm font-bold border-t text-white pt-3">
                 <span>Total</span>
                 <span>₱{selected.totalAmount.toLocaleString()}</span>
                 

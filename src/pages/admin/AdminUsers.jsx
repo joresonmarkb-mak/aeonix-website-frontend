@@ -39,12 +39,12 @@ export default function AdminUsers() {
           <div className="relative">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users..."
-              className="pl-8 pr-4 py-2 border border-gray-200 text-sm focus:outline-none focus:border-[#1a1410] w-64" />
+              className="pl-8 pr-4 py-2 border rounded-sm border-white/5 text-sm text-white focus:outline-none focus:border-[#1a1410] w-64" />
           </div>
           <p className="text-xs text-gray-400">{users.length} total users</p>
         </div>
 
-        <div className="bg-white">
+        <div className="bg-[#1a1a1a] rounded-lg">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100">
@@ -58,7 +58,7 @@ export default function AdminUsers() {
             <tbody>
               {loading ? (
                 [...Array(5)].map((_, i) => (
-                  <tr key={i} className="border-b border-gray-50">
+                  <tr key={i} className="border-b border-gray">
                     <td colSpan={5} className="px-5 py-3"><div className="h-4 bg-gray-100 rounded animate-pulse" /></td>
                   </tr>
                 ))
@@ -66,21 +66,21 @@ export default function AdminUsers() {
                 <tr><td colSpan={5} className="px-5 py-10 text-center text-gray-400 text-sm">No users found</td></tr>
               ) : (
                 filtered.map(u => (
-                  <tr key={u._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                  <tr key={u._id} className=" border-gray-50 hover:bg-black transition-colors">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-[#C8A03C]/10 flex items-center justify-center text-[#C8A03C] text-xs font-bold flex-shrink-0">
                           {u.name?.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-[#1a1410]">{u.name}</p>
+                          <p className="text-xs font-semibold text-white">{u.name}</p>
                           <p className="text-[10px] text-gray-400">{u.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-xs text-gray-600">{u.phone || "—"}</td>
+                    <td className="px-5 py-3 text-xs text-white">{u.phone || "—"}</td>
                     <td className="px-5 py-3">
-                      <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2 py-0.5 ${u.role === "admin" ? "bg-[#C8A03C]/10 text-[#C8A03C]" : "bg-gray-100 text-gray-500"}`}>
+                      <span className={`text-[10px] font-bold tracking-[1px] uppercase px-2 py-0.5 ${u.role === "admin" ? "bg-[#C8A03C]/10 text-[#C8A03C] rounded-sm" : "bg-gray-100 text-gray-500 rounded-sm "}`}>
                         {u.role}
                       </span>
                     </td>

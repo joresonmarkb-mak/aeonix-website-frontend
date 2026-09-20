@@ -7,6 +7,7 @@ import AuthModal from "./Authmodal.jsx";
 import CategorySplit from "../components/categorySplit.jsx";
 import Featuredarticle from "../components/Featuredarticle.jsx";
 import EmailSubscription from "../components/EmailSubscription.jsx";
+import ClientTestimonials from "../components/Clientestimonials.jsx";
 // ── Mock Data ──────────────────────────────────────────────
 
 
@@ -36,89 +37,116 @@ const carouselImages = [
   }, []);
  
   return (
-      <section className="relative min-h-screen  flex items-center overflow-hidden bg-[#0a0a0a]">
-     <div
-        className="absolute inset-0 overflow-hidden"
-        style={{
-          backgroundImage:
-            "url(https://res.cloudinary.com/dp3iviwzj/image/upload/v1788961817/image_31_w4tvfo.png)",
-          backgroundSize: "100%",
-          backgroundPosition: "",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/40" />
+  <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
+  <div
+    className="absolute inset-0 overflow-hidden"
+    style={{
+      backgroundImage: "url(https://res.cloudinary.com/dp3iviwzj/image/upload/v1788961817/image_31_w4tvfo.png)",
+      backgroundSize: "100%",
+      backgroundPosition: "",
+      backgroundRepeat: "no-repeat",
+    }}
+  />
+  <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/40" />
 
-      {/* Two-column grid: text left, watches right */}
-      <div className="relative max-w-[100rem] mx-auto px-[4%] w-full grid md:grid-cols-[55%_45%] gap-12 items-center">
-        {/* Text column */}
-        <div className="max-w-3xl">
-        <h1 className="font-sans  text-[#f0ece4] mb-6 leading-tight">
-          <span className="text-[#FAD136] text-[clamp(2.5rem,8vw,10rem)] font-handwriting">Timeless Elegance</span> <br/> <div className=" mt-[-3rem] font-sanss text-[clamp(2.5rem,4vw,6rem)]">ON YOUR WRIST</div> 
-        </h1>
-          <p className="text-gray-400 text-xl leading-relaxed mb-8 max-w-xl font-sanss">
-            Discover the world of Timeless Elegance, where every timepiece
-            tells a story of craftsmanship, heritage, and sophistication.
-          </p>
-          <button
-            type="button"
-            onClick={onShopNow}
-            className="px-10 py-4 bg-[#FAD136] font-sanss hover:bg-[#e0b84a] text-black text-base font-bold transition-colors border-none cursor-pointer rounded-sm"
-          >
-            Discover Collection
-          </button>
+  {/* Mobile — darker overlay so text is readable */}
+  <div className="absolute inset-0 bg-[#0a0a0a]/60 md:hidden" />
+
+  <div className="relative max-w-[100rem] mx-auto px-[4%] w-full grid md:grid-cols-[55%_45%] gap-12 items-center">
+    
+    {/* Text column */}
+    <div className="max-w-3xl max-md:text-center max-md:flex max-md:flex-col max-md:items-center max-md:pt-24 max-md:pb-16">
+      <h1 className="font-sans text-[#f0ece4] mb-6 leading-tight">
+        <span className="text-[#FAD136] text-[clamp(2.5rem,8vw,10rem)] max-md:text-[clamp(5.2rem,10vw,3.5rem)] font-handwriting">
+          Timeless Elegance
+        </span>
+        <br />
+        <div className="mt-[-3rem] max-md:mt-[-1.5rem] font-sanss text-[clamp(2.5rem,4vw,6rem)] max-md:text-[clamp(1.5rem,7vw,2.5rem)]">
+          ON YOUR WRIST
         </div>
+      </h1>
+      <p className="text-gray-400 text-xl max-md:text-sm leading-relaxed mb-8 max-w-xl max-md:max-w-xs font-sanss">
+        Discover the world of Timeless Elegance, where every timepiece
+        tells a story of craftsmanship, heritage, and sophistication.
+      </p>
+      <button
+        type="button"
+        onClick={onShopNow}
+        className="px-10 py-4 max-md:px-7 max-md:py-3 bg-[#FAD136] font-sanss hover:bg-[#e0b84a] text-black text-base max-md:text-sm font-bold transition-colors border-none cursor-pointer rounded-sm"
+      >
+        Discover Collection
+      </button>
 
-        {/* Image column */}
-        <div className="relative hidden md:flex items-center justify-center h-full">
-          <div
-            className="absolute w-[640px] h-[640px] rounded-full opacity-30 blur-3xl pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, #C8A03C 0%, transparent 70%)",
-            }}
-          />
-
-          {/* Clamped size: min 400px, scales at 65vw, caps at 820px */}
-          <div className="relative z-10 w-[clamp(400px,65vw,820px)] h-[clamp(400px,65vw,920px)]">
-            {carouselImages.map((src, i) => (
-              <img
-                key={src + i}
-                src={src}
-                alt={`Featured watches ${i + 1}`}
-                className="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out"
-                style={{ opacity: i === activeIndex ? 1 : 0 }}
+      {/* Mobile carousel — shown only on mobile */}
+      <div className="md:hidden mt-8 relative w-full flex items-center justify-center">
+        <div className="relative w-[clamp(220px,70vw,340px)] h-[clamp(220px,70vw,340px)]">
+          {carouselImages.map((src, i) => (
+            <img
+              key={src + i}
+              src={src}
+              alt={`Featured watches ${i + 1}`}
+              className="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out"
+              style={{ opacity: i === activeIndex ? 1 : 0 }}
+            />
+          ))}
+        </div>
+        {carouselImages.length > 1 && (
+          <div className="absolute -bottom-4 flex gap-2">
+            {carouselImages.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setActiveIndex(i)}
+                className={`h-1.5 rounded-full transition-all border-none cursor-pointer ${
+                  i === activeIndex ? "w-6 bg-[#C8A03C]" : "w-1.5 bg-[#C8A03C]/30"
+                }`}
               />
             ))}
           </div>
+        )}
+      </div>
+    </div>
 
-          {/* Carousel dots */}
-          {carouselImages.length > 1 && (
-            <div className="absolute -bottom-2 flex gap-2 z-10">
-              {carouselImages.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setActiveIndex(i)}
-                  className={`h-1.5 rounded-full transition-all border-none cursor-pointer ${
-                    i === activeIndex ? "w-6 bg-[#C8A03C]" : "w-1.5 bg-[#C8A03C]/30"
-                  }`}
-                  aria-label={`Show slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
+    {/* Desktop image column — unchanged */}
+    <div className="relative hidden md:flex items-center justify-center h-full">
+      <div
+        className="absolute w-[640px] h-[640px] rounded-full opacity-30 blur-3xl pointer-events-none"
+        style={{ background: "radial-gradient(circle, #C8A03C 0%, transparent 70%)" }}
+      />
+      <div className="relative z-10 w-[clamp(400px,65vw,820px)] h-[clamp(400px,65vw,920px)]">
+        {carouselImages.map((src, i) => (
+          <img
+            key={src + i}
+            src={src}
+            alt={`Featured watches ${i + 1}`}
+            className="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out"
+            style={{ opacity: i === activeIndex ? 1 : 0 }}
+          />
+        ))}
+      </div>
+      {carouselImages.length > 1 && (
+        <div className="absolute -bottom-2 flex gap-2 z-10">
+          {carouselImages.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              className={`h-1.5 rounded-full transition-all border-none cursor-pointer ${
+                i === activeIndex ? "w-6 bg-[#C8A03C]" : "w-1.5 bg-[#C8A03C]/30"
+              }`}
+            />
+          ))}
         </div>
-      </div>
-     
- 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-gray-600 text-[10px] tracking-[3px] uppercase">
-          Scroll
-        </span>
-        <div className="w-px h-10 bg-gradient-to-b from-[#C8A03C] to-transparent" />
-      </div>
-    </section>
+      )}
+    </div>
+  </div>
+
+  {/* Scroll indicator */}
+  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 max-md:hidden">
+    <span className="text-gray-600 text-[10px] tracking-[3px] uppercase">Scroll</span>
+    <div className="w-px h-10 bg-gradient-to-b from-[#C8A03C] to-transparent" />
+  </div>
+</section>
   );
 }
 
@@ -149,7 +177,7 @@ function NewArrivals() {
         <div className="flex items-center  justify-between mb-12">
           <div>
             <p className="text-[#C8A03C] text-[11px] tracking-[4px] uppercase mb-3">Just Landed</p>
-            <h2 className="font-serif text-4xl text-white font-bold">New Arrivals</h2>
+            <h2 className="font-sanss text-4xl text-white font-bold">New Arrivals</h2>
           </div>
           {!loading && watches.length > itemsPerPage && (
             <div className="flex gap-3">
@@ -192,7 +220,7 @@ function NewArrivals() {
         {/* Cards */}
         {!loading && !error && (
           <>
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6  ">
+            <div className=" grid grid-cols-1 max-sm:grid-cols-2 lg:grid-cols-4 gap-6  ">
               {visible.map(watch => (
                 <div key={watch._id} className="bg-[#211C0A] group cursor-pointer hover:-translate-y-1.5 hover:shadow-2xl transition-all duration-300 ">
                   <div className="relative overflow-hidden aspect-square">
@@ -206,9 +234,9 @@ function NewArrivals() {
                     </span>
                   </div>
                   <div className="p-4 text-center  font-sanss ">
-                    <p className="text-gray-400 text-[11px] tracking-[2px] uppercase mb-1">{watch.brand}</p>
-                    <p className="text-base text-white font-bold mb-2">{watch.name}</p>
-                    <p className="text-[#C8A03C] text-base font-bold">₱{watch.price.toLocaleString()}</p>
+                    <p className="text-gray-400 text-[clamp(10px,1.5vw,11px)] tracking-[2px] uppercase mb-1">{watch.brand}</p>
+                    <p className="text-[clamp(10px,1.5vw,17px)] text-white font-bold mb-2">{watch.name}</p>
+                    <p className="text-[#C8A03C] text-[clamp(10px,1.5vw,17px)]  font-bold">₱{watch.price.toLocaleString()}</p>
                   </div>
                 </div>
               ))}
@@ -284,6 +312,7 @@ export default function Home() {
       <NewArrivals />
       <CategorySplit />
       <TrustBar />
+      <ClientTestimonials/>
        <StyleBudgetBanner />
        <Featuredarticle />
       <EmailSubscription />

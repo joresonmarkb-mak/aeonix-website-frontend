@@ -37,12 +37,12 @@ export default function About() {
       <Navbar />
 
       {/* Hero — logo + about text */}
-      <section className="bg-white pt-28 pb-16 px-[5%]">
+      <section className="bg-[#0a0a0a] pt-28 pb-16 px-[5%]">
         <div className="max-w-3xl mx-auto text-center">
           <img
             src="https://res.cloudinary.com/dp3iviwzj/image/upload/v1782254317/png_iikwqh.png"
             alt="Aeonix Logo"
-            className="h-80 mx-auto mb-10"
+            className="h-80 mx-auto mb-5"
           />
           <p className="text-gray-600 text-sm leading-relaxed">
             Founded in 2024 by three college students who share a passion for collecting and appreciating watches,
@@ -71,22 +71,31 @@ export default function About() {
       </section>
 
       {/* Our Brands */}
- <section className="bg-white py-16 px-[5%]">
+<section className="bg-white py-16 px-[5%]">
   <div className="max-w-3xl mx-auto">
     <p className="text-[11px] tracking-[4px] uppercase text-gray-400 mb-12 text-center">OUR BRANDS</p>
 
     <div className="flex flex-col gap-16">
       {brands.map((brand, i) => (
-        <div key={brand.name} className={`flex gap-10 items-center ${i % 2 !== 0 ? "flex-row" : "flex-row-reverse"}`}>
+        <div
+          key={brand.name}
+          className={`flex flex-col md:flex-row gap-6 md:gap-10 items-center ${
+            i % 2 !== 0 ? "md:flex-row" : "md:flex-row-reverse"
+          }`}
+        >
 
           {/* Image */}
-          <div className="w-90 h-100 flex-shrink-0 overflow-hidden">
-  <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover scale-110" />
-</div>
+          <div className="w-full max-w-[20rem] md:w-[clamp(14rem,25vw,22.5rem)] aspect-[9/10] flex-shrink-0 overflow-hidden">
+            <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover scale-110" />
+          </div>
 
           {/* Text */}
-          <div className={`flex flex-col flex-1 ${i % 2 !== 0 ? "items-end text-right" : "items-start text-left"}`}>
-            <img src={brand.name} alt={brand.name} className="h-30 object-contain mb-5" />
+          <div
+            className={`flex flex-col flex-1 items-center text-center md:items-start md:text-left ${
+              i % 2 !== 0 ? "" : "md:items-end md:text-right"
+            }`}
+          >
+            <img src={brand.name} alt={brand.name} className="h-[clamp(1.75rem,4vw,3rem)] object-contain mb-5" />
             <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
               {brand.description}
             </p>

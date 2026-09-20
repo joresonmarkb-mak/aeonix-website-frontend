@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   signInWithPopup,
   signInWithEmailAndPassword,
@@ -76,6 +76,14 @@ function GoogleBtn({ onClick, loading }) {
   const [profile, setProfile] = useState({
     name: "", phone: "", street: "", city: "", province: "", postalCode: "",
   });
+
+    useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+  
 
   const clearError = () => setError("");
 

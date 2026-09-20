@@ -171,51 +171,52 @@ export default function AdminProducts() {
 
   return (
     <AdminLayout>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 ">
 
-        {/* Inventory summary */}
+        {/* Inventory summary
         {showInventory && (
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-white p-3">
+          <div className="grid grid-cols-3 gap-3 bg-[#0a0a0a]">
+            <div className="bg-[#1a1a1a] p-3">
               <p className="text-[9px] text-gray-400 uppercase tracking-[1px]">Inventory Value</p>
-              <p className="text-base font-bold text-[#1a1410]">₱{inventorySummary.totalInventoryValue.toLocaleString()}</p>
+              <p className="text-base font-bold text-white">₱{inventorySummary.totalInventoryValue.toLocaleString()}</p>
             </div>
-            <div className="bg-white p-3">
-              <p className="text-[9px] text-gray-400 uppercase tracking-[1px]">Total Cost</p>
-              <p className="text-base font-bold text-[#1a1410]">₱{inventorySummary.totalCostValue.toLocaleString()}</p>
+            <div className="bg-[#1a1a1a] p-3">
+              <p className="text-[9px] text-white uppercase tracking-[1px]">Total Cost</p>
+              <p className="text-base font-bold text-white">₱{inventorySummary.totalCostValue.toLocaleString()}</p>
             </div>
-            <div className="bg-white p-3">
+            <div className="bg-[#1a1a1a] p-3">
               <p className="text-[9px] text-gray-400 uppercase tracking-[1px]">Potential Profit</p>
               <p className="text-base font-bold text-green-600">₱{inventorySummary.totalPotentialProfit.toLocaleString()}</p>
             </div>
+            bg-[#1a1a1a] border overflow-hidden rounded-lg border-white/5
           </div>
-        )}
+        )} */}
 
         {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 bg-[#0f0f0f] ">
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..."
-              className="pl-8 pr-4 py-2 border border-gray-200 text-sm focus:outline-none focus:border-[#1a1410] w-full" />
+            <input   value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..."
+              className=" text-white rounded-sm pl-8 pr-4 py-2 border border-white/5 bg-[#1a1a1a] text-sm focus:outline-none focus:border-white w-full" />
           </div>
           <div className="flex gap-2 flex-wrap">
             <button onClick={() => setShowInventory(!showInventory)}
-              className={`px-3 py-2 text-xs font-bold tracking-[1px] uppercase border transition-colors cursor-pointer ${showInventory ? "bg-[#1a1410] text-[#C8A03C] border-[#1a1410]" : "bg-white text-gray-500 border-gray-200 hover:border-[#1a1410]"}`}>
-              📊 {showInventory ? "Hide Costs" : "Show Costs"}
+              className={`px-3 py-2 text-xs font-bold tracking-[1px] uppercase border transition-colors cursor-pointer ${showInventory ? "bg-[#1a1a1a] text-[#C8A03C] border-white/5" : "border-white/5 bg-[#1a1a1a] text-gray-500 rounded-sm "}`}>
+               {showInventory ? "Hide Costs" : "Show Costs"}
             </button>
-            <div className="flex border border-gray-200 overflow-hidden">
+            <div className="flex border border-white/5 overflow-hidden rounded-sm ">
               <button onClick={() => setView("list")}
-                className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "list" ? "bg-[#1a1410] text-[#C8A03C]" : "bg-white text-gray-400 hover:text-[#1a1410]"}`}>
+                className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "list" ? "bg-[#1a1410] text-[#C8A03C]" : "bg-[#1a1a1a] border-gray-700 text-[#C8A03C] hover:text-white"}`}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
               </button>
               <button onClick={() => setView("tile")}
-                className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "tile" ? "bg-[#1a1410] text-[#C8A03C]" : "bg-white text-gray-400 hover:text-[#1a1410]"}`}>
+                className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "tile" ? "bg-[#1a1410] text-[#C8A03C]" : "bg-[#1a1a1a] border-gray-700 text-[#C8A03C] hover:text-white"}`}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
               </button>
             </div>
             <button onClick={openCreate}
-              className="px-4 py-2 bg-[#1a1410] text-[#C8A03C] text-xs font-bold tracking-[1.5px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer">
-              + Add
+              className=" px-8 py-2 bg-[#1a1a1a] rounded-xs text-[#C8A03C] text-lg  tracking-[1.5px] uppercase hover:bg-[#2a2018] transition-colors border-none cursor-pointer">
+              +
             </button>
           </div>
         </div>
@@ -235,25 +236,25 @@ export default function AdminProducts() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 ">
               {filtered.map(p => {
                 const margin = getMargin(p);
                 return (
-                  <div key={p._id} className="bg-white overflow-hidden">
+                  <div key={p._id} className="bg-[#1a1a1a] border overflow-hidden rounded-lg border-white/5">
                     <div className="aspect-square overflow-hidden bg-gray-100 relative">
                       <img src={p.images?.[0]?.replace(/"/g, '') || "https://placehold.co/200x200?text=?"} alt={p.name} className="w-full h-full object-cover" />
-                      <span className={`absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 ${p.stock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+                      <span className={`absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 ${p.stock > 0 ? "bg-green-100 text-green-700 rounded-sm" : "rounded-sm bg-red-100 text-red-600"}`}>
                         {p.stock > 0 ? `${p.stock}` : "Out"}
                       </span>
                       <span className={`absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 
-                        ${p.status === 'Servicing' ? 'bg-orange-100 text-orange-600' : p.status === 'Sold' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`}>
+                        ${p.status === 'Servicing' ? 'bg-orange-100 text-orange-600 rounded-sm' : p.status === 'Sold' ? 'bg-red-100 text-red-600 rounded-sm' : 'bg-green-100 text-green-700 rounded-sm'}`}>
                           
                         {p.status || 'In Stock'}
                       </span>
                     </div>
                     <div className="p-2.5">
                       <p className="text-[10px] text-gray-400 uppercase tracking-[1px] truncate">{p.brand}</p>
-                      <p className="text-xs font-bold text-[#1a1410] truncate">{p.name}</p>
+                      <p className="text-xs font-bold text-white truncate">{p.name}</p>
                       <p className="text-xs text-[#C8A03C] font-bold mt-1">₱{p.price.toLocaleString()}</p>
                       {showInventory && margin !== null && (
                         <div className="mt-1.5 flex items-center justify-between">
@@ -262,9 +263,9 @@ export default function AdminProducts() {
                         </div>
                       )}
                       <div className="flex gap-1 mt-2">
-                        <button onClick={() => openEdit(p)} className="flex-1 text-[10px] py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 border-none cursor-pointer transition-colors">Edit</button>
-                        <button onClick={() => setSaleProduct(p)} className="flex-1 text-[10px] py-1 bg-green-50 hover:bg-green-100 text-green-600 border-none cursor-pointer transition-colors">Sold</button>
-                        <button onClick={() => handleDelete(p._id)} className="flex-1 text-[10px] py-1 bg-red-50 hover:bg-red-100 text-red-400 border-none cursor-pointer transition-colors">Del</button>
+                        <button onClick={() => openEdit(p)} className="flex-1 text-[10px] py-1 bg-gray-300 hover:bg-gray-200 text-gray-600 border-none cursor-pointer transition-colors rounded-sm">EDIT</button>
+                        <button onClick={() => setSaleProduct(p)} className="flex-1 text-[10px] py-1 bg-gray-300 hover:bg-green-100 text-gray-600 border-none cursor-pointer transition-colors rounded-sm">SOLD</button>
+                        <button onClick={() => handleDelete(p._id)} className="flex-1 text-[10px] py-1 bg-gray-300 hover:bg-red-100 text-gray-600 border-none cursor-pointer transition-colors rounded-sm">DEL</button>
                       </div>
                     </div>
                   </div>
@@ -307,7 +308,7 @@ export default function AdminProducts() {
                     const margin = getMargin(p);
                     const profit = p.costPrice ? p.price - p.costPrice : null;
                     return (
-                      <tr key={p._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                      <tr key={p._id} className=" hover:bg-gray-50 transition-colors">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="w-9 h-9 bg-gray-100 overflow-hidden flex-shrink-0">
@@ -330,7 +331,7 @@ export default function AdminProducts() {
                           </td>
                         </>}
                         <td className="px-4 py-3">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 ${p.stock > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 ${p.stock > 0 ? "bg-green-100 text-green-700 rounded-sm" : "bg-red-100 text-red-600 rounded-sm"}`}>
                             {p.stock > 0 ? p.stock : "Out"}
                           </span>
                         </td>
