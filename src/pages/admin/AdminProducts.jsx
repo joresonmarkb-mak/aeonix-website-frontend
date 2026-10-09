@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import AdminLayout from "./AdminLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import API from "../../services/Api.js";
-import ManualSaleModal from "./Manualsalemodal.jsx";
+import ManualSaleModal from "./ManualSaleModal.jsx";
 
 const emptyForm = {
   name: "", referenceNumber: "", brand: "", description: "", price: "",
