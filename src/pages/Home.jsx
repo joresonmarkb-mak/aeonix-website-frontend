@@ -38,7 +38,7 @@ const carouselImages = [
  
   return (
   <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0a0a0a]">
-  <div
+  {/* <div
     className="absolute inset-0 overflow-hidden"
     style={{
       backgroundImage: "url(https://res.cloudinary.com/dp3iviwzj/image/upload/v1788961817/image_31_w4tvfo.png)",
@@ -46,7 +46,7 @@ const carouselImages = [
       backgroundPosition: "",
       backgroundRepeat: "no-repeat",
     }}
-  />
+  /> */}
   <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/40" />
 
   {/* Mobile — darker overlay so text is readable */}
